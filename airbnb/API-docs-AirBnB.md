@@ -1,8 +1,8 @@
-# `<name of application here>`
+# `AirBRB`
 
 ## Database Schema Design
 
-`<insert database schema design here>`
+![db design](<Screenshot 2024-07-09 014021.png>)
 
 ## API Documentation
 
