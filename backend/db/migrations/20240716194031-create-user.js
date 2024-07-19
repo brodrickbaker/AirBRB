@@ -1,5 +1,7 @@
 'use strict';
 
+const { sequelize } = require("../models");
+
 let options = {};
 if (process.env.NODE_ENV === 'production'){
   options.schema = process.env.SCHEMA;
@@ -27,6 +29,14 @@ module.exports = {
       hashedPassword: {
         type: Sequelize.STRING.BINARY,
         allowNull: false
+      },
+      firstName: {
+        type: Sequelize.STRING(30),
+        allowNull: true
+      },
+      lastName: {
+        type: Sequelize.STRING(30),
+        allowNull: true
       },
       createdAt: {
         allowNull: false,
