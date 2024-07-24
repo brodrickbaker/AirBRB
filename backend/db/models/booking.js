@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         isDate: true,
         isPresent(val){
-          if (val <  new Date) {
+          if (val <  new Date()) {
             throw new Error ('startDate cannot be in the past')
           }
         }
