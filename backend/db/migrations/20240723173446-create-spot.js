@@ -49,6 +49,7 @@ module.exports = {
       },
       description: {
         type: Sequelize.STRING,
+        allowNull: false
       },
       price: {
         type: Sequelize.INTEGER,
@@ -67,7 +68,6 @@ module.exports = {
     }, options);
   },
   async down(queryInterface, Sequelize) {
-    options.TableName = 'Spots'
-    await queryInterface.dropTable(options);
+    await queryInterface.dropTable('Spots', options);
   }
 };
