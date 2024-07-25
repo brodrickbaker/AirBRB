@@ -2,14 +2,24 @@
 const router = require('express').Router();
 const sessionRouter = require('./session.js');
 const usersRouter = require('./users.js');
-// GET /api/restore-user
-const { restoreUser } = require('../../utils/auth.js');
+const spotsRouter = require('./spots.js')
 
+const { requireAuth } = require('../../utils/auth.js')
+const { restoreUser } = require('../../utils/auth.js');
 // Connect restoreUser middleware to the API router
 // If current user session is valid, set req.user to the user in the database
 // If current user session is not valid, set req.user to null
 router.use(restoreUser);
 
+router.use('/session', sessionRouter);
+
+router.use('/users', usersRouter);
+
+router.use('/spots', spotsRouter)
+
+router.post('/test', requireAuth, (req, res) => {
+  res.json({ requestBody: req.body });
+});
 // GET /api/set-token-cookie
 const { setTokenCookie } = require('../../utils/auth.js');
 const { User } = require('../../db/models');
@@ -21,27 +31,6 @@ router.get('/set-token-cookie', async (_req, res) => {
   });
   setTokenCookie(res, user);
   return res.json({ user: user });
-});
-
-
-
-
-router.get("/csrf/restore", (req, res) => {
-  const csrfToken = req.csrfToken();
-  res.cookie("XSRF-TOKEN", csrfToken);
-  res.status(200).json({
-    'XSRF-Token': csrfToken
-  });
-});
-
-
-
-router.use('/session', sessionRouter);
-
-router.use('/users', usersRouter);
-
-router.post('/test', (req, res) => {
-  res.json({ requestBody: req.body });
 });
 
 module.exports = router;
