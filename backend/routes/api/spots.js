@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { Spot, Review, SpotImage, User } = require('../../db/models');
 const spot = require('../../db/models/spot');
-const { requireAuth, restoreUser } = require('../../utils/auth')
+const { requireAuth, setTokenCookie } = require('../../utils/auth')
 
 // find avg rating
 const getAvg = spots => {
@@ -53,12 +53,10 @@ router.get('/', async (_req, res) => {
     res.json({'Spots': craftedSpots})
 })
 
-router.use(restoreUser)
-router.use(requireAuth)
-
- // get all spots of curtrent user with reviews and images
-router.get('/current', async (req, res) => {
+ // get all spots of current user with reviews and images
+router.get('/current', requireAuth, async (req, res) => {
     const { user } = req
+    console.log(req)
     const userSpots = await Spot.findAll({
         where: {
             ownerId: user.id,
@@ -94,16 +92,17 @@ router.get('/current', async (req, res) => {
     res.json({'Spots': craftedSpots})
 })
 
-router.get('/:id', async (req, res)=> {
+//get spots by spot id
+router.get('/:id', async (req, res, next)=> {
     const {id} = req.params
-    const spot = await Spot.findOne({
+    let spot = await Spot.findOne({
         where: {
             id: id
         }, 
         include: [
             {
                 model: SpotImage,
-                attributes: ['id', 'url', 'preview']
+                attributes: ['id', 'url', 'preview'],
             },
             {
                 model: User, as: 'Owner',
@@ -112,18 +111,52 @@ router.get('/:id', async (req, res)=> {
         ]
     })
 
+    if(!spot) {
+        let err = new Error('Spot couldn\'t be found')
+        res.status(404)
+        res.json({message: err.message})
+    }
+    
     const reviews = await spot.getReviews()
     const totalReviews = reviews.length
     const totalStars = reviews.reduce((acc, review) => {
         return acc + review.stars
     }, 0)
     const avg = totalStars/totalReviews 
+    
+    spot = spot.toJSON()
     spot.numReviews = totalReviews
     spot.avgStarRating = avg
-    console.log(spot)
     res.json(spot)
-
 })
 
+router.post('/', async (req, res) => {
+ 
+    const { user } = req
+    const { address, city, state, country, lat, lng, name, description, price } = req.body
+    await Spot.create(
+        {
+            ownerId: user.dataValues.id,
+            address: address,
+            city: city,
+            state: state,
+            country: country,
+            lat: lat,
+            lng: lng,
+            name: name,
+            description: description,
+            price: price
+        }
+    )
+
+    const newSpot = await Spot.findAll(
+        {   
+            order: [['id','DESC']],
+            limit: 1
+        }
+    )
+
+    res.json(newSpot)
+})
 
 module.exports = router;
