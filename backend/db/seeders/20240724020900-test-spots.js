@@ -31,7 +31,32 @@ module.exports = {
         name: "App Academy",
         description: "Place where web developers are created",
         price: 123
+      },
+      {
+        ownerId: 3,
+        address: "456 Disney Lane",
+        city: "San Francisco",
+        state: "California",
+        country: "United States of America",
+        lat: 47.7645358,
+        lng: -12.4730327,
+        name: "Lapp Academy",
+        description: "Place where web developers are created",
+        price: 125
+      },
+      {
+        ownerId: 2,
+        address: "567 DC Lane",
+        city: "Gotham City",
+        state: "New York",
+        country: "United States of America",
+        lat: 67.9899,
+        lng: 1.98,
+        name: "Wayne Manor",
+        description: "Batmans House",
+        price: 1000
       }
+
 
     ], {validate: true})
   },
