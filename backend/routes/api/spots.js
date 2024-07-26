@@ -233,4 +233,66 @@ router.post('/:spotId/images', requireAuth, async (req, res) => {
     res.json(...newImage)
 })
 
+router.put('/:id', requireAuth, validateSpot, async (req, res) => {
+    const { id } = req.params
+    const { address, city, state, country, lat, lng, name, description, price } = req.body
+
+    let spot = await Spot.findOne({
+            where: {
+                id: id
+            }
+        })
+
+    if(!spot) {
+        let err = new Error('Spot couldn\'t be found')
+        res.status(404)
+        res.json({message: err.message})
+    }
+
+    await spot.update({
+        address: address,
+        city: city,
+        state: state,
+        country: country,
+        lat: lat,
+        lng: lng,
+        name: name,
+        description: description,
+        price: price,
+        updatedAt: new Date
+    })
+
+    spot = await Spot.findOne({
+        where: {
+            id: id
+        }
+    })
+    
+    res.json(spot)
+})
+
+router.delete('/:id', requireAuth, async (req, res) => {
+    const { id } = req.params
+    
+    let spot = await Spot.findOne({
+        where: {
+            id: id
+        }
+    })
+
+    if(!spot) {
+        let err = new Error('Spot couldn\'t be found')
+        res.status(404)
+        res.json({message: err.message})
+    }
+
+    await Spot.destroy({
+        where: {
+            id: id
+        }
+    })
+
+    res.json({"message": "Successfully deleted"})
+})
+
 module.exports = router;
