@@ -1,7 +1,10 @@
 const router = require('express').Router();
 const { Spot, Review, SpotImage, User } = require('../../db/models');
 const spot = require('../../db/models/spot');
-const { requireAuth, setTokenCookie } = require('../../utils/auth')
+const { requireAuth } = require('../../utils/auth');
+
+const { check } = require('express-validator');
+const { handleValidationErrors } = require('../../utils/validation');
 
 // find avg rating
 const getAvg = spots => {
@@ -130,7 +133,46 @@ router.get('/:id', async (req, res, next)=> {
     res.json(spot)
 })
 
-router.post('/', async (req, res) => {
+const validateSpot = [
+    check('address')
+      .exists({ checkFalsy: true })
+      .withMessage('Street address is required'),
+    check('city')
+      .exists({ checkFalsy: true })
+      .withMessage('City is required'),
+    check('state')
+      .exists({checkFalsy: true})
+      .withMessage('State is required'),
+    check('country')
+      .exists({checkFalsy: true})
+      .withMessage('Country is required'),
+    check('lat')
+      .isFloat({
+        min: -90,
+        max: 90
+      })
+      .withMessage('Latitude must be within -90 and 90'),
+    check('lng')
+      .isFloat({
+        min: -180,
+        max: 180
+      })
+      .withMessage('Longitude must be within -180 and 180'),
+    check('name')
+      .isLength({ max: 50 })
+      .withMessage('Name must be less than 50 characters'),
+    check('description')
+      .exists({ checkFalsy: true })
+      .withMessage('Description is required'),
+    check('price')
+      .isFloat({
+        min: 1
+      })
+      .withMessage('Price per day must be a positive number'),
+    handleValidationErrors
+];
+// create new spot for current user
+router.post('/', requireAuth, validateSpot, async (req, res) => {
  
     const { user } = req
     const { address, city, state, country, lat, lng, name, description, price } = req.body
