@@ -200,7 +200,7 @@ router.post('/', requireAuth, validateSpot, async (req, res) => {
 
     res.json(...newSpot)
 })
-
+// add an image to a spot by id
 router.post('/:spotId/images', requireAuth, async (req, res) => {
     const { spotId } = req.params
     const { url, preview } = req.body
@@ -232,7 +232,7 @@ router.post('/:spotId/images', requireAuth, async (req, res) => {
     console.log(newImage)
     res.json(...newImage)
 })
-
+// edit a spot by id
 router.put('/:id', requireAuth, validateSpot, async (req, res) => {
     const { id } = req.params
     const { address, city, state, country, lat, lng, name, description, price } = req.body
@@ -270,7 +270,7 @@ router.put('/:id', requireAuth, validateSpot, async (req, res) => {
     
     res.json(spot)
 })
-
+// delete a spot by id
 router.delete('/:id', requireAuth, async (req, res) => {
     const { id } = req.params
     
