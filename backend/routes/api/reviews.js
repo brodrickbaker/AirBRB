@@ -28,7 +28,7 @@ router.get('/current', requireAuth, async (req, res) => {
                 attributes: ["id", "ownerId", "address", "city", "state", "country",
                             "lat", "lng", "name", "price"],
                             include: {
-                                model: SpotImage, as: 'previewImage'
+                                model: SpotImage
                             }
              },
             { 
@@ -39,11 +39,14 @@ router.get('/current', requireAuth, async (req, res) => {
     })
     reviews = reviews.map(review => {
         review = review.toJSON()
-        review.Spot.previewImage = review.Spot.previewImage[0].url
+        if (review.Spot.SpotImages[0]){
+             review.Spot.previewImage = review.Spot.SpotImages[0].url
+        } else review.Spot.previewImage = null;
+        delete review.Spot.SpotImages
         return review
     })
    
     res.json({"Reviews": reviews})
   })
 
-module.exports = router;
+  module.exports = router;

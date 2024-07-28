@@ -16,6 +16,14 @@ const getAvg = spots => {
       spot.avgRating = avg
     })
     }
+// error handling for spot not found
+const spotError = (spot, res) => {
+    if(!spot) {
+        let err = new Error('Spot couldn\'t be found')
+        res.status(404)
+        res.json({message: err.message})
+    }
+}
 
  // get all spots with reviews and images
 router.get('/', async (_req, res) => {
@@ -58,7 +66,6 @@ router.get('/', async (_req, res) => {
  // get all spots of current user with reviews and images
 router.get('/current', requireAuth, async (req, res) => {
     const { user } = req
-    console.log(req)
     const userSpots = await Spot.findAll({
         where: {
             ownerId: user.id,
@@ -94,7 +101,7 @@ router.get('/current', requireAuth, async (req, res) => {
     res.json({'Spots': craftedSpots})
 })
 
-//get spots by spot id
+//get spot by spot id
 router.get('/:id', async (req, res, next)=> {
     const {id} = req.params
     let spot = await Spot.findOne({
@@ -113,11 +120,7 @@ router.get('/:id', async (req, res, next)=> {
         ]
     })
 
-    if(!spot) {
-        let err = new Error('Spot couldn\'t be found')
-        res.status(404)
-        res.json({message: err.message})
-    }
+    spotError(spot, res);
     
     const reviews = await spot.getReviews()
     const totalReviews = reviews.length
@@ -209,11 +212,7 @@ router.post('/:spotId/images', requireAuth, async (req, res) => {
         }
     })
 
-    if(!spot) {
-        let err = new Error('Spot couldn\'t be found')
-        res.status(404)
-        res.json({message: err.message})
-    }
+    spotError(spot, res);
 
     await SpotImage.create({
         spotId: spot.id,
@@ -242,11 +241,7 @@ router.put('/:id', requireAuth, validateSpot, async (req, res) => {
             }
         })
 
-    if(!spot) {
-        let err = new Error('Spot couldn\'t be found')
-        res.status(404)
-        res.json({message: err.message})
-    }
+    spotError(spot, res);
 
     await spot.update({
         address: address,
@@ -279,11 +274,7 @@ router.delete('/:id', requireAuth, async (req, res) => {
         }
     })
 
-    if(!spot) {
-        let err = new Error('Spot couldn\'t be found')
-        res.status(404)
-        res.json({message: err.message})
-    }
+    spotError(spot, res);
 
     await Spot.destroy({
         where: {
@@ -304,11 +295,7 @@ router.get('/:id/reviews', async (req, res) => {
         }
     })
 
-    if(!spot) {
-        let err = new Error('Spot couldn\'t be found')
-        res.status(404)
-        res.json({message: err.message})
-    }
+    spotError(spot, res);
 
     let reviews = await Review.findAll({
         where: {
@@ -329,6 +316,58 @@ router.get('/:id/reviews', async (req, res) => {
     res.json({"Reviews": reviews})
 
 })
+const validReview = [
+    check('review')
+    .exists({ checkFalsy: true })
+    .withMessage("Review text is required"),
+    check('stars')
+    .isInt({
+      min: 1,
+      max: 5
+    })
+    .withMessage("Stars must be an integer from 1 to 5"),
+  handleValidationErrors
+]
+// Create a review for a spot based on spot's id
+router.post('/:id/reviews', validReview, requireAuth, async (req, res) => {
+    const { user } = req
+    const { id } = req.params
+    const { review, stars } = req.body
+
+    let spot = await Spot.findOne({
+        where: {
+            id: id
+        }
+    })
+
+    spotError(spot, res);
+    
+    let checkReview = await Review.findOne({
+        where:{
+            spotId: id,
+            userId: user.id,
+        }
+    })
+    if (checkReview) {
+        res.status(500)
+        res.json({message: "User already has a review for this spot"})
+    }
+    
+    let newReview = await Review.create({
+        spotId: id,
+        userId: user.id,
+        review: review,
+        stars: stars
+    })
+
+    newReview = await Review.findAll({
+        order: [['id', 'DESC']],
+        limit: 1
+    })
+
+    res.json(newReview)
+  })
+
 
 
 module.exports = router;
