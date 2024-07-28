@@ -620,7 +620,7 @@ Returns all the reviews written by the current user.
 * Require Authentication: true
 * Request
   * Method: GET
-  * Route path: /users/reviews/current
+  * Route path: /reviews/current
   * Body: none
 
 * Successful Response
