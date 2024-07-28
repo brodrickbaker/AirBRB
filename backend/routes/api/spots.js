@@ -361,4 +361,3 @@ router.post('/:id/reviews', validReview, requireAuth, async (req, res) => {
 
 
 module.exports = router;
-module.exports = validReview;

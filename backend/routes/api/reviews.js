@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const { Spot, Review, ReviewImage, User, SpotImage } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
-const validReview = require('./spots')
 
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
@@ -13,6 +12,19 @@ const reviewError = (review, res) => {
         return res.json({message:err.message})
     }
 }
+
+const validReview = [
+    check('review')
+    .exists({ checkFalsy: true })
+    .withMessage("Review text is required"),
+    check('stars')
+    .isInt({
+      min: 1,
+      max: 5
+    })
+    .withMessage("Stars must be an integer from 1 to 5"),
+  handleValidationErrors
+]
 // get all reviews of current user
 router.get('/current', requireAuth, async (req, res) => {
     let { user } = req
