@@ -3,8 +3,15 @@ const { Spot, Review, SpotImage, User, ReviewImage } = require('../../db/models'
 const { requireAuth } = require('../../utils/auth');
 
 const { check } = require('express-validator');
-const { handleValidationErrors, spotError, validReview } = require('../../utils/validation');
-
+const { handleValidationErrors, validReview } = require('../../utils/validation');
+// error handling for spot not found
+const spotError = (spot, res) => {
+    if(!spot) {
+        let err = new Error('Spot couldn\'t be found')
+        res.status(404)
+        return res.json({message: err.message})
+    }
+  }
 // find avg rating
 const getAvg = spots => {
     return spots.forEach(spot => {
@@ -339,6 +346,34 @@ router.post('/:id/reviews', validReview, requireAuth, async (req, res) => {
     }).then(review => res.json(...review))
   })
 
+// return all bookings based on spot id
+router.get('/:id/bookings', requireAuth, async (req, res) => {
+    const { id } = req.params
+    const { user } = req
+    const spot  = await Spot.findOne({
+        where: {
+            id: id
+        }
+    })
+
+    if (spotError(spot, res)) return;
+
+    let bookings;
+    if (spot.ownerId == user.id) {
+       bookings = await spot.getBookings({
+        include: {
+            model: User,
+            attributes: ['id', 'firstName', 'lastName']
+        }
+       }) 
+    } else {
+        bookings = await spot.getBookings({
+            attributes: ['spotId', 'startDate', 'endDate']
+        })
+    }
+
+    return res.json({'Bookings': bookings})
+})
 
 
 module.exports = router;

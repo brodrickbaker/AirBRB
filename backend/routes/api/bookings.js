@@ -3,9 +3,17 @@ const { Spot, Review, ReviewImage, User, SpotImage } = require('../../db/models'
 const { requireAuth } = require('../../utils/auth');
 
 const { check } = require('express-validator');
-const { handleValidationErrors, spotError } = require('../../utils/validation');
+const { handleValidationErrors } = require('../../utils/validation');
 const spot = require('../../db/models/spot');
 
+// error handling for booking not found
+const bookingError = (booking, res) => {
+    if(!booking) {
+        let err = new Error('Spot couldn\'t be found')
+        res.status(404)
+        return res.json({message: err.message})
+    }
+  }
 // get all bookings from current user
 router.get('/current', requireAuth, async (req, res) => {
     const { user } = req
@@ -48,5 +56,6 @@ router.get('/current', requireAuth, async (req, res) => {
     })
     return res.json({'Bookings': bookings})
 })
+
 
 module.exports = router;

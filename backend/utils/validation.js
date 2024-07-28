@@ -19,15 +19,6 @@ const handleValidationErrors = (req, _res, next) => {
   next();
 };
 
-// error handling for spot not found
-const spotError = (spot, res) => {
-  if(!spot) {
-      let err = new Error('Spot couldn\'t be found')
-      res.status(404)
-      return res.json({message: err.message})
-  }
-}
-
 // review validation
 const validReview = [
   check('review')
@@ -44,6 +35,5 @@ handleValidationErrors
 
 module.exports = {
   handleValidationErrors,
-  spotError,
   validReview
 };
