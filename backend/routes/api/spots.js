@@ -1,6 +1,5 @@
 const router = require('express').Router();
-const { Spot, Review, SpotImage, User } = require('../../db/models');
-const spot = require('../../db/models/spot');
+const { Spot, Review, SpotImage, User, ReviewImage } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
 
 const { check } = require('express-validator');
@@ -294,5 +293,42 @@ router.delete('/:id', requireAuth, async (req, res) => {
 
     res.json({"message": "Successfully deleted"})
 })
+
+// get reviews by a spots id
+router.get('/:id/reviews', async (req, res) => {
+    const { id } = req.params
+    
+    let spot = await Spot.findOne({
+        where: {
+            id: id
+        }
+    })
+
+    if(!spot) {
+        let err = new Error('Spot couldn\'t be found')
+        res.status(404)
+        res.json({message: err.message})
+    }
+
+    let reviews = await Review.findAll({
+        where: {
+            spotId: spot.id
+        },
+        include: [
+            { 
+                model: User,
+                attributes: ["id", "firstName", "lastName"]
+             },
+            { 
+                model: ReviewImage,
+                attributes: ["id", "url"]
+            }
+        ]
+    })
+
+    res.json({"Reviews": reviews})
+
+})
+
 
 module.exports = router;
