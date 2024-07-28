@@ -3,7 +3,7 @@ const { Spot, Review, SpotImage, User, ReviewImage } = require('../../db/models'
 const { requireAuth } = require('../../utils/auth');
 
 const { check } = require('express-validator');
-const { handleValidationErrors } = require('../../utils/validation');
+const { handleValidationErrors, spotError, validReview } = require('../../utils/validation');
 
 // find avg rating
 const getAvg = spots => {
@@ -16,14 +16,6 @@ const getAvg = spots => {
       spot.avgRating = avg
     })
     }
-// error handling for spot not found
-const spotError = (spot, res) => {
-    if(!spot) {
-        let err = new Error('Spot couldn\'t be found')
-        res.status(404)
-        return res.json({message: err.message})
-    }
-}
 
  // get all spots with reviews and images
 router.get('/', async (_req, res) => {
@@ -310,18 +302,7 @@ router.get('/:id/reviews', async (req, res) => {
     }).then(reviews => res.json({"Reviews": reviews}))
 
 })
-const validReview = [
-    check('review')
-    .exists({ checkFalsy: true })
-    .withMessage("Review text is required"),
-    check('stars')
-    .isInt({
-      min: 1,
-      max: 5
-    })
-    .withMessage("Stars must be an integer from 1 to 5"),
-  handleValidationErrors
-]
+
 // Create a review for a spot based on spot's id
 router.post('/:id/reviews', validReview, requireAuth, async (req, res) => {
     const { user } = req

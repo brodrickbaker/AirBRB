@@ -3,7 +3,7 @@ const { Spot, Review, ReviewImage, User, SpotImage } = require('../../db/models'
 const { requireAuth } = require('../../utils/auth');
 
 const { check } = require('express-validator');
-const { handleValidationErrors } = require('../../utils/validation');
+const { handleValidationErrors, spotError } = require('../../utils/validation');
 const spot = require('../../db/models/spot');
 
 // get all bookings from current user
