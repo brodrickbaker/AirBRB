@@ -865,7 +865,7 @@ Update and return an existing review.
 * Require Authentication: true
 * Require proper authorization: Review must belong to the current user
 * Request
-  * Method: PUT/PATCH
+  * Method: PUT
   * Route path: /api/reviews/:id
   * Headers:
     * Content-Type: application/json

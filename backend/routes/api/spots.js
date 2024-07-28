@@ -202,11 +202,13 @@ router.post('/', requireAuth, validateSpot, async (req, res) => {
 })
 // add an image to a spot by id
 router.post('/:spotId/images', requireAuth, async (req, res) => {
+    const { user } = req
     const { spotId } = req.params
     const { url, preview } = req.body
     const spot = await Spot.findOne({
         where: {
-            id: spotId
+            id: spotId,
+            ownerId: user.id
         }
     })
 
@@ -228,12 +230,14 @@ router.post('/:spotId/images', requireAuth, async (req, res) => {
 })
 // edit a spot by id
 router.put('/:id', requireAuth, validateSpot, async (req, res) => {
+    const { user } = req
     const { id } = req.params
     const { address, city, state, country, lat, lng, name, description, price } = req.body
 
     let spot = await Spot.findOne({
             where: {
-                id: id
+                id: id,
+                ownerId: user.id                
             }
         })
 
@@ -260,11 +264,13 @@ router.put('/:id', requireAuth, validateSpot, async (req, res) => {
 })
 // delete a spot by id
 router.delete('/:id', requireAuth, async (req, res) => {
+    const { user } = req
     const { id } = req.params
     
     let spot = await Spot.findOne({
         where: {
-            id: id
+            id: id,
+            ownerId: user.id
         }
     })
 
@@ -355,3 +361,4 @@ router.post('/:id/reviews', validReview, requireAuth, async (req, res) => {
 
 
 module.exports = router;
+module.exports = validReview;

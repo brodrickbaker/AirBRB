@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const { Spot, Review, ReviewImage, User, SpotImage } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
+const validReview = require('./spots')
 
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
@@ -54,7 +55,7 @@ router.get('/current', requireAuth, async (req, res) => {
    
     res.json({"Reviews": reviews})
   })
-
+// add image to review based on review id
 router.post('/:id/images', requireAuth, async (req, res) => {
     const { user } = req
     const { id } = req.params
@@ -74,7 +75,7 @@ router.post('/:id/images', requireAuth, async (req, res) => {
         res.status(403)
         return res.json({message: "Maximum number of images for this resource was reached"})
     }
-    
+
     await ReviewImage.create({
         reviewId: id,
         url: url
@@ -90,6 +91,49 @@ router.post('/:id/images', requireAuth, async (req, res) => {
         })
     )
 
+})
+
+// update an existing review
+router.put('/:id', requireAuth, validReview, async (req, res) => {
+    const { user } = req
+    const { id } = req.params
+    const { review, stars } = req.body
+
+    const userReview = await Review.findOne({
+        where: {
+            id: id,
+            userId: user.id
+        }
+    })
+
+    if (reviewError(userReview, res)) return;
+
+    await userReview.update({
+        review: review,
+        stars: stars,
+        updatedAt: new Date()
+    })
+
+    await Review.findOne({
+        where: { id: id }
+    }).then(updatedReview => res.json(updatedReview))
+})
+
+//delete an existing review
+router.delete('/:id', requireAuth, async (req, res) => {
+    const { user } = req
+    const { id } = req.params
+
+    const userReview = await Review.findOne({
+        where: {
+            id: id,
+            userId: user.id
+        }
+    })
+
+    if (reviewError(userReview, res)) return;
+
+    await userReview.destroy().then(() => res.json({message: 'Successfully deleted'}))
 })
 
   module.exports = router;
