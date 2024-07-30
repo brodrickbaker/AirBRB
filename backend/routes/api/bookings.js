@@ -3,10 +3,6 @@ const { Spot, Review, ReviewImage, User, SpotImage, Booking } = require('../../d
 const { requireAuth } = require('../../utils/auth');
 const { isBooked } = require('../../utils/validation');
 
-// authorized user check
-const isAuthorized = (booking, user, res) => {
-    if (booking.userId !== user.id) return res.status(403).json({message: 'Forbidden'})
-}
 // error handling for booking not found
 const bookingError = (booking, res) => {
     if(!booking) {
@@ -69,7 +65,7 @@ router.put('/:id', requireAuth, async (req, res) => {
         }
     })
     if (bookingError(booking, res)) return;
-    if (isAuthorized(booking, user, res)) return;
+    if (booking.userId !== user.id) return res.status(403).json({message: 'Forbidden'});
     if (new Date(booking.endDate) < new Date()) return res.status(403).json({message: "Past bookings can't be modified" })
     const spot = await Spot.findOne({
         where: {
@@ -91,5 +87,24 @@ router.put('/:id', requireAuth, async (req, res) => {
     }
 })
 
+// delete a booking
+router.delete('/:id', requireAuth, async (req, res) => {
+    const { id } = req.params
+    const { user } = req
+    const booking = await Booking.findOne({
+        where: {
+            id: id
+        }, 
+        include: {
+            model: Spot
+        }
+    })
+    if (bookingError(booking, res)) return;
+    if (booking.userId !== user.id && booking.Spot.ownerId !== user.id) return res.status(403).json({message: 'Forbidden'}); 
+    if (new Date(booking.startDate) < new Date()) return res.status(403).json({message: "Bookings that have been started can't be deleted" })
+   
+    await booking.destroy().then(() => res.json({message: 'Successfully deleted'}))
+        
+})
 
 module.exports = router;
