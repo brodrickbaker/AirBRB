@@ -10,7 +10,10 @@ const reviewError = (review, res) => {
         return res.json({message:err.message})
     }
 }
-
+// authorized user check
+const isAuthorized = (review, user, res) => {
+    if (user.id !== review.userId) return res.status(403).json({message: 'Forbidden'})
+}
 // get all reviews of current user
 router.get('/current', requireAuth, async (req, res) => {
     let { user } = req
@@ -61,12 +64,12 @@ router.post('/:id/images', requireAuth, async (req, res) => {
 
     const review = await Review.findOne({
         where: {
-            id: id,
-            userId: user.id
+            id: id
         }
     })
 
     if (reviewError(review, res)) return;
+    if (isAuthorized(review, user, res)) return;
 
     const currentImages = await review.getReviewImages()
     if (currentImages.length >= 10) {
@@ -99,12 +102,12 @@ router.put('/:id', requireAuth, validReview, async (req, res) => {
 
     const userReview = await Review.findOne({
         where: {
-            id: id,
-            userId: user.id
+            id: id
         }
     })
 
     if (reviewError(userReview, res)) return;
+    if (isAuthorized(userReview, user, res)) return;
 
     await userReview.update({
         review: review,
@@ -124,12 +127,12 @@ router.delete('/:id', requireAuth, async (req, res) => {
 
     const userReview = await Review.findOne({
         where: {
-            id: id,
-            userId: user.id
+            id: id
         }
     })
 
     if (reviewError(userReview, res)) return;
+    if (isAuthorized(userReview, user, res)) return;
 
     await userReview.destroy().then(() => res.json({message: 'Successfully deleted'}))
 })
