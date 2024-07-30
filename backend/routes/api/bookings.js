@@ -1,15 +1,16 @@
 const router = require('express').Router();
-const { Spot, Review, ReviewImage, User, SpotImage } = require('../../db/models');
+const { Spot, Review, ReviewImage, User, SpotImage, Booking } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
+const { isBooked } = require('../../utils/validation');
 
-const { check } = require('express-validator');
-const { handleValidationErrors } = require('../../utils/validation');
-const spot = require('../../db/models/spot');
-
+// authorized user check
+const isAuthorized = (booking, user, res) => {
+    if (booking.userId !== user.id) return res.status(403).json({message: 'Forbidden'})
+}
 // error handling for booking not found
 const bookingError = (booking, res) => {
     if(!booking) {
-        let err = new Error('Spot couldn\'t be found')
+        let err = new Error('Booking couldn\'t be found')
         res.status(404)
         return res.json({message: err.message})
     }
@@ -55,6 +56,39 @@ router.get('/current', requireAuth, async (req, res) => {
         return bookingPayload
     })
     return res.json({'Bookings': bookings})
+})
+
+// update an existing booking
+router.put('/:id', requireAuth, async (req, res) => {
+    const { id } = req.params
+    const { user } = req
+    let { startDate, endDate } = req.body
+    const booking = await Booking.findOne({
+        where: {
+            id: id
+        }
+    })
+    if (bookingError(booking, res)) return;
+    if (isAuthorized(booking, user, res)) return;
+    if (new Date(booking.endDate) < new Date()) return res.status(403).json({message: "Past bookings can't be modified" })
+    const spot = await Spot.findOne({
+        where: {
+            id: booking.spotId
+        }
+    })
+
+    if (await isBooked(spot, startDate, endDate, res)) return;
+
+    try {
+        await booking.update({
+            spotId: spot.id,
+            userId: user.id,
+            startDate: startDate,
+            endDate: endDate
+        }).then(booking => res.json(booking))
+    } catch (err) {
+    res.status(400).json({ message: err.message })
+    }
 })
 
 

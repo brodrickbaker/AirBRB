@@ -3,8 +3,8 @@ const { Spot, Review, SpotImage, User, ReviewImage, Booking } = require('../../d
 const { requireAuth } = require('../../utils/auth');
 
 const { check } = require('express-validator');
-const { handleValidationErrors, validReview } = require('../../utils/validation');
-const booking = require('../../db/models/booking');
+const { handleValidationErrors, validReview, isBooked,  } = require('../../utils/validation');
+
 
 // authorized user check
 const isAuthorized = (spot, user, res) => {
@@ -398,20 +398,7 @@ router.post('/:id/bookings', requireAuth, async (req, res) => {
     if(spotError(spot, res)) return;
     if (spot.ownerId == user.id) return res.status(403).json({message: 'Forbidden'})
 
-    startDate = new Date(startDate)
-    endDate = new Date(endDate)
-    const bookings = await spot.getBookings();
-    for (let i = 0; i < bookings.length; i++) {
-        let booking = bookings[i]
-        const message = {
-            message: "Sorry, this spot is already booked for the specified dates",
-            errors: {}
-        }
-        
-        if(startDate >= booking.startDate && startDate <= booking.endDate) message.errors.startDate = "Start date conflicts with an existing booking";
-        if(endDate <= booking.endDate && endDate >= booking.startDate) message.errors.endDate = "End date conflicts with an existing booking";
-        if(message.errors.startDate || message.errors.endDate) return res.status(403).json(message)
-    }
+    if (await isBooked(spot, startDate, endDate, res)) return;
 
     try {
         await Booking.create({

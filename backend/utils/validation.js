@@ -33,7 +33,26 @@ const validReview = [
 handleValidationErrors
 ]
 
+// check if spot is booked
+const isBooked = async (spot, startDate, endDate, res) => {
+    startDate = new Date(startDate)
+    endDate = new Date(endDate)
+    const bookings = await spot.getBookings();
+    for (let i = 0; i < bookings.length; i++) {
+        let booking = bookings[i]
+        const message = {
+            message: "Sorry, this spot is already booked for the specified dates",
+            errors: {}
+        }
+        
+        if(startDate >= booking.startDate && startDate <= booking.endDate) message.errors.startDate = "Start date conflicts with an existing booking";
+        if(endDate <= booking.endDate && endDate >= booking.startDate) message.errors.endDate = "End date conflicts with an existing booking";
+        if(message.errors.startDate || message.errors.endDate) return res.status(403).json(message)
+    }
+}
+
 module.exports = {
   handleValidationErrors,
   validReview,
+  isBooked
 };
