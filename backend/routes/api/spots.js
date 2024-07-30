@@ -1,9 +1,17 @@
 const router = require('express').Router();
-const { Spot, Review, SpotImage, User, ReviewImage } = require('../../db/models');
+const { Spot, Review, SpotImage, User, ReviewImage, Booking } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
 
 const { check } = require('express-validator');
 const { handleValidationErrors, validReview } = require('../../utils/validation');
+const booking = require('../../db/models/booking');
+
+// authorized user check
+const isAuthorized = (spot, user, res) => {
+    if (spot.ownerId !== user.id) return res.status(403).json({message: 'Forbidden'})
+}
+
+
 // error handling for spot not found
 const spotError = (spot, res) => {
     if(!spot) {
@@ -206,12 +214,12 @@ router.post('/:spotId/images', requireAuth, async (req, res) => {
     const { url, preview } = req.body
     const spot = await Spot.findOne({
         where: {
-            id: spotId,
-            ownerId: user.id
+            id: spotId
         }
     })
 
     if (spotError(spot, res)) return;
+    if (isAuthorized(spot, user, res)) return;
 
     await SpotImage.create({
         spotId: spot.id,
@@ -235,12 +243,12 @@ router.put('/:id', requireAuth, validateSpot, async (req, res) => {
 
     let spot = await Spot.findOne({
             where: {
-                id: id,
-                ownerId: user.id                
+                id: id              
             }
         })
 
     if (spotError(spot, res)) return;
+    if (isAuthorized(spot, user, res)) return;
 
     await spot.update({
         address: address,
@@ -268,12 +276,12 @@ router.delete('/:id', requireAuth, async (req, res) => {
     
     let spot = await Spot.findOne({
         where: {
-            id: id,
-            ownerId: user.id
+            id: id
         }
     })
 
     if (spotError(spot, res)) return;
+    if (isAuthorized(spot, user, res)) return;
 
     await spot.destroy()
 
@@ -324,26 +332,27 @@ router.post('/:id/reviews', validReview, requireAuth, async (req, res) => {
 
    if (spotError(spot, res)) return;
     
-    await Review.findOne({
+   const reviewed = await Review.findOne({
         where:{
             spotId: id,
-            userId: user.id,
+            userId: user.id
         }
-    }).then(review => {
-        if(review) throw new Error ("User already has a review for this spot")
-        })
-
-    await Review.create({
-        spotId: id,
-        userId: user.id,
-        review: review,
-        stars: stars
-    })
-
-    await Review.findAll({
-        order: [['id', 'DESC']],
-        limit: 1
-    }).then(review => res.json(...review))
+    }) 
+        if(reviewed) {
+          return res.status(403).json({message: "User already has a review for this spot"})
+        } else {
+            await Review.create({
+                spotId: id,
+                userId: user.id,
+                review: review,
+                stars: stars
+            })
+        
+            await Review.findAll({
+                order: [['id', 'DESC']],
+                limit: 1
+            }).then(review => res.json(...review))
+        }
   })
 
 // return all bookings based on spot id
@@ -375,5 +384,45 @@ router.get('/:id/bookings', requireAuth, async (req, res) => {
     return res.json({'Bookings': bookings})
 })
 
+// create a new booking based on spot id
+router.post('/:id/bookings', requireAuth, async (req, res) => {
+    const { id } = req.params
+    const { user } = req
+    let { startDate, endDate } = req.body
+    const spot = await Spot.findOne({
+        where: {
+            id: id
+        }
+    })
+
+    if(spotError(spot, res)) return;
+    if (spot.ownerId == user.id) return res.status(403).json({message: 'Forbidden'})
+
+    startDate = new Date(startDate)
+    endDate = new Date(endDate)
+    const bookings = await spot.getBookings();
+    for (let i = 0; i < bookings.length; i++) {
+        let booking = bookings[i]
+        const message = {
+            message: "Sorry, this spot is already booked for the specified dates",
+            errors: {}
+        }
+        
+        if(startDate >= booking.startDate && startDate <= booking.endDate) message.errors.startDate = "Start date conflicts with an existing booking";
+        if(endDate <= booking.endDate && endDate >= booking.startDate) message.errors.endDate = "End date conflicts with an existing booking";
+        if(message.errors.startDate || message.errors.endDate) return res.status(403).json(message)
+    }
+
+    try {
+        await Booking.create({
+            spotId: id,
+            userId: user.id,
+            startDate: startDate,
+            endDate: endDate
+        }).then(booking => res.json(booking))
+    } catch (err) {
+    res.status(400).json({ message: err.message })
+    }
+})
 
 module.exports = router;
