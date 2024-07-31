@@ -72,8 +72,9 @@ router.put('/:id', requireAuth, async (req, res) => {
             id: booking.spotId
         }
     })
-
-    if (await isBooked(spot, startDate, endDate, res)) return;
+    if ((new Date(startDate) && new Date(endDate)) >= booking.startDate && (new Date(startDate) && new Date(endDate)) <= booking.endDate) {
+    } else if (new Date(startDate) < booking.startDate && new Date(endDate) > booking.endDate){
+    } else if (await isBooked(spot, startDate, endDate, res)) return;
 
     try {
         await booking.update({
@@ -85,6 +86,7 @@ router.put('/:id', requireAuth, async (req, res) => {
     } catch (err) {
     res.status(400).json({ message: err.message })
     }
+
 })
 
 // delete a booking
