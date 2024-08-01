@@ -43,12 +43,6 @@ const isBooked = async (spot, startDate, endDate, res) => {
       message: "Sorry, this spot is already booked for the specified dates",
       errors: {}
     }
-
-    if (startDate.toString() == endDate.toString()) {
-      message.message = 'Booking must be at least 1 day'
-      message.errors.startDate = startError
-      message.errors.endDate = endError
-    }
     const bookings = await spot.getBookings();
     for (let i = 0; i < bookings.length; i++) {
         let booking = bookings[i]
