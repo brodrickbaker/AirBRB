@@ -4,7 +4,7 @@ const { requireAuth } = require('../../utils/auth');
 
 const { check } = require('express-validator');
 const { handleValidationErrors, validReview, isBooked,  } = require('../../utils/validation');
-
+const { Op } = require('sequelize');
 
 // authorized user check
 const isAuthorized = (spot, user, res) => {
@@ -22,32 +22,83 @@ const spotError = (spot, res) => {
   }
 // find avg rating
 const getAvg = spots => {
-    return spots.forEach(spot => {
+    spots.forEach(spot => {
       const reviews = spot.Reviews 
       const totalStars = reviews.reduce((acc, review) => {
         return acc + review.stars
     }, 0)
       const avg = totalStars/reviews.length
       spot.avgRating = avg
+      return
     })
     }
+// get preview image
+const preview = spot => {
+    const images = spot.SpotImages
+    if (images.length) {
+        for (let i = 0; i < images.length; i++) {
+            if (images[i].preview) {
+                spot.previewImage = images[i].url
+            }
+        }
+    } else spot.previewImage = null
+    return
+}
 
  // get all spots with reviews and images
-router.get('/', async (_req, res) => {
-   
+router.get('/', async (req, res) => {
+    let {page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query
+    const where = {}
+    
+    const setParams = (min, max, attr) => {
+    
+        if (min && max) {
+            where[attr] = { 
+                [Op.and]: {
+                    [Op.gt]: min,
+                    [Op.lt]: max
+                }
+            }
+        } 
+        else if (min) {
+            where[attr] = { [Op.gt]: min }
+        } else if (max) where[attr] = { [Op.lt]: max }
+        return
+    }
+    
+    setParams(minLat, maxLat, 'lat');
+    setParams(minLng, maxLng, 'lng');
+    setParams(minPrice, maxPrice, 'price')
+
+    if (!page) {
+        page = 1;
+      } else {
+        page = parseInt(page);
+      }
+      
+    if (!size) {
+        size = 20;
+      } else if(size > 20){
+        size = 20
+      } else {
+        size = parseInt(size)
+      }
     const allSpots = await Spot.findAll(
         {
+            where: where,
             include: [
                 {model: Review},
                 {model: SpotImage}
-            ]
+            ],
+            limit: size,
+            offset: size * (page - 1)
         }
     );
     
     getAvg(allSpots)
     // construct response
     const craftedSpots = allSpots.map(spot => {
-        if (spot.SpotImages.length !== 0) spot.previewImage = spot.SpotImages[0].url
+        preview(spot)
         let payload = {
             id: spot.id,
             ownerId: spot.ownerId,
@@ -67,7 +118,11 @@ router.get('/', async (_req, res) => {
         }
         return payload
     })
-    res.json({'Spots': craftedSpots})
+    res.json({
+        'Spots': craftedSpots,
+        'page': page,
+        'size': size
+    })
 })
 
  // get all spots of current user with reviews and images
@@ -85,7 +140,7 @@ router.get('/current', requireAuth, async (req, res) => {
     getAvg(userSpots)
 
     const craftedSpots = userSpots.map(spot => {
-        if (spot.SpotImages.length !== 0) spot.previewImage = spot.SpotImages[0].url
+        preview(spot)
         let payload = {
             id: spot.id,
             ownerId: spot.ownerId,
@@ -259,8 +314,7 @@ router.put('/:id', requireAuth, validateSpot, async (req, res) => {
         lng: lng,
         name: name,
         description: description,
-        price: price,
-        updatedAt: new Date
+        price: price
     })
 
     await Spot.findOne({
