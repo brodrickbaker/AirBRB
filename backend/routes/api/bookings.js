@@ -1,10 +1,10 @@
 const router = require('express').Router();
 const { Spot, SpotImage, Booking } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
-const { isBooked } = require('../../utils/validation');
+const { isBooked, preview } = require('../../utils/validation');
 
 // error handling for booking not found
-const bookingError = (booking, res) => {
+const bookingNotFound = (booking, res) => {
     if(!booking) {
         let err = new Error('Booking couldn\'t be found')
         res.status(404)
@@ -27,6 +27,7 @@ router.get('/current', requireAuth, async (req, res) => {
 
     bookings = bookings.map(booking => {
         const spot = booking.Spot;
+        preview(spot)
         bookingPayload = {
             id: booking.id,
             spotId: booking.spotId,
@@ -41,7 +42,7 @@ router.get('/current', requireAuth, async (req, res) => {
                 lng: spot.lng,
                 name: spot.name,
                 price: spot.price,
-                previewImage: spot.SpotImages[0].url
+                previewImage: spot.previewImage
             },
             userId: booking.userId,
             startDate: booking.startDate,
@@ -64,9 +65,10 @@ router.put('/:id', requireAuth, async (req, res) => {
             id: id
         }
     })
-    if (bookingError(booking, res)) return;
+    if (bookingNotFound(booking, res)) return;
     if (booking.userId !== user.id) return res.status(403).json({message: 'Forbidden'});
     if (new Date(booking.endDate) < new Date()) return res.status(403).json({message: "Past bookings can't be modified" })
+    
     const spot = await Spot.findOne({
         where: {
             id: booking.spotId
@@ -84,7 +86,7 @@ router.put('/:id', requireAuth, async (req, res) => {
             endDate: endDate
         }).then(booking => res.json(booking))
     } catch (err) {
-    res.status(400).json({ message: err.message })
+        return res.status(400).json({ message: err.message })
     }
 
 })
@@ -101,7 +103,7 @@ router.delete('/:id', requireAuth, async (req, res) => {
             model: Spot
         }
     })
-    if (bookingError(booking, res)) return;
+    if (bookingNotFound(booking, res)) return;
     if (booking.userId !== user.id && booking.Spot.ownerId !== user.id) return res.status(403).json({message: 'Forbidden'}); 
     if (new Date(booking.startDate) < new Date()) return res.status(403).json({message: "Bookings that have been started can't be deleted" })
    

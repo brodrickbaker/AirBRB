@@ -1,9 +1,9 @@
 const router = require('express').Router();
 const { Spot, Review, ReviewImage, User, SpotImage } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
-const { validReview } = require('../../utils/validation');
+const { validReview, preview } = require('../../utils/validation');
 
-const reviewError = (review, res) => {
+const reviewNotFound = (review, res) => {
     if (!review){
         const err = new Error ("Review couldn't be found") 
         res.status(404)
@@ -11,9 +11,10 @@ const reviewError = (review, res) => {
     }
 }
 // authorized user check
-const isAuthorized = (review, user, res) => {
+const notAuthorized = (review, user, res) => {
     if (user.id !== review.userId) return res.status(403).json({message: 'Forbidden'})
 }
+
 // get all reviews of current user
 router.get('/current', requireAuth, async (req, res) => {
     let { user } = req
@@ -45,36 +46,37 @@ router.get('/current', requireAuth, async (req, res) => {
             }
         ]
     })
+
     reviews = reviews.map(review => {
         review = review.toJSON()
-        if (review.Spot.SpotImages[0]){
-             review.Spot.previewImage = review.Spot.SpotImages[0].url
+        const spot = review.Spot
+        preview(spot)
+        if (spot.previewImage){
+             review.Spot.previewImage = spot.previewImage
         } else review.Spot.previewImage = null;
         delete review.Spot.SpotImages
         return review
     })
-   
-    res.json({"Reviews": reviews})
+    return res.json({"Reviews": reviews})
   })
 // add image to review based on review id
 router.post('/:id/images', requireAuth, async (req, res) => {
     const { user } = req
     const { id } = req.params
     const { url } = req.body
-
     const review = await Review.findOne({
         where: {
             id: id
         }
     })
 
-    if (reviewError(review, res)) return;
-    if (isAuthorized(review, user, res)) return;
+    if (reviewNotFound(review, res)) return;
+    if (notAuthorized(review, user, res)) return;
 
     const currentImages = await review.getReviewImages()
+    
     if (currentImages.length >= 10) {
-        res.status(403)
-        return res.json({message: "Maximum number of images for this resource was reached"})
+        return res.status(403).json({message: "Maximum number of images for this resource was reached"})
     }
 
     await ReviewImage.create({
@@ -91,7 +93,6 @@ router.post('/:id/images', requireAuth, async (req, res) => {
             url: reviewImage[0].url
         })
     )
-
 })
 
 // update an existing review
@@ -106,8 +107,8 @@ router.put('/:id', requireAuth, validReview, async (req, res) => {
         }
     })
 
-    if (reviewError(userReview, res)) return;
-    if (isAuthorized(userReview, user, res)) return;
+    if (reviewNotFound(userReview, res)) return;
+    if (notAuthorized(userReview, user, res)) return;
 
     await userReview.update({
         review: review,
@@ -124,15 +125,14 @@ router.put('/:id', requireAuth, validReview, async (req, res) => {
 router.delete('/:id', requireAuth, async (req, res) => {
     const { user } = req
     const { id } = req.params
-
     const userReview = await Review.findOne({
         where: {
             id: id
         }
     })
 
-    if (reviewError(userReview, res)) return;
-    if (isAuthorized(userReview, user, res)) return;
+    if (reviewNotFound(userReview, res)) return;
+    if (notAuthorized(userReview, user, res)) return;
 
     await userReview.destroy().then(() => res.json({message: 'Successfully deleted'}))
 })

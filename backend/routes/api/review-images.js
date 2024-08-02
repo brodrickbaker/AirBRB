@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { ReviewImage, Spot, Review } = require('../../db/models');
+const { ReviewImage, Review } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
 
 // delete an image for a review

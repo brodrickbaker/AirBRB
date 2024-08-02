@@ -3,17 +3,16 @@ const { Spot, Review, SpotImage, User, ReviewImage, Booking } = require('../../d
 const { requireAuth } = require('../../utils/auth');
 
 const { check } = require('express-validator');
-const { handleValidationErrors, validReview, isBooked,  } = require('../../utils/validation');
+const { handleValidationErrors, validReview, isBooked, preview } = require('../../utils/validation');
 const { Op } = require('sequelize');
 
 // authorized user check
-const isAuthorized = (spot, user, res) => {
+const notAuthorized = (spot, user, res) => {
     if (spot.ownerId !== user.id) return res.status(403).json({message: 'Forbidden'})
 }
 
-
 // error handling for spot not found
-const spotError = (spot, res) => {
+const spotNotFound = (spot, res) => {
     if(!spot) {
         let err = new Error('Spot couldn\'t be found')
         res.status(404)
@@ -32,18 +31,6 @@ const getAvg = spots => {
       return
     })
     }
-// get preview image
-const preview = spot => {
-    const images = spot.SpotImages
-    if (images.length) {
-        for (let i = 0; i < images.length; i++) {
-            if (images[i].preview) {
-                spot.previewImage = images[i].url
-            }
-        }
-    } else spot.previewImage = null
-    return
-}
 
  // get all spots with reviews and images
 router.get('/', async (req, res) => {
@@ -51,7 +38,6 @@ router.get('/', async (req, res) => {
     const where = {}
     
     const setParams = (min, max, attr) => {
-    
         if (min && max) {
             where[attr] = { 
                 [Op.and]: {
@@ -76,13 +62,12 @@ router.get('/', async (req, res) => {
         page = parseInt(page);
       }
       
-    if (!size) {
+    if (!size || size > 20) {
         size = 20;
-      } else if(size > 20){
-        size = 20
       } else {
         size = parseInt(size)
       }
+
     const allSpots = await Spot.findAll(
         {
             where: where,
@@ -118,7 +103,7 @@ router.get('/', async (req, res) => {
         }
         return payload
     })
-    res.json({
+    return res.json({
         'Spots': craftedSpots,
         'page': page,
         'size': size
@@ -160,7 +145,7 @@ router.get('/current', requireAuth, async (req, res) => {
         }
         return payload
     })
-    res.json({'Spots': craftedSpots})
+    return res.json({'Spots': craftedSpots})
 })
 
 //get spot by spot id
@@ -182,7 +167,7 @@ router.get('/:id', async (req, res, next)=> {
         ]
     })
 
-    if (spotError(spot, res)) return;
+    if (spotNotFound(spot, res)) return;
     
     const reviews = await spot.getReviews()
     const totalReviews = reviews.length
@@ -194,7 +179,7 @@ router.get('/:id', async (req, res, next)=> {
     spot = spot.toJSON()
     spot.numReviews = totalReviews
     spot.avgStarRating = avg
-    res.json(spot)
+    return res.json(spot)
 })
 
 const validateSpot = [
@@ -237,9 +222,9 @@ const validateSpot = [
 ];
 // create new spot for current user
 router.post('/', requireAuth, validateSpot, async (req, res) => {
- 
     const { user } = req
     const { address, city, state, country, lat, lng, name, description, price } = req.body
+    
     await Spot.create(
         {
             ownerId: user.dataValues.id,
@@ -273,8 +258,8 @@ router.post('/:spotId/images', requireAuth, async (req, res) => {
         }
     })
 
-    if (spotError(spot, res)) return;
-    if (isAuthorized(spot, user, res)) return;
+    if (spotNotFound(spot, res)) return;
+    if (notAuthorized(spot, user, res)) return;
 
     await SpotImage.create({
         spotId: spot.id,
@@ -302,8 +287,8 @@ router.put('/:id', requireAuth, validateSpot, async (req, res) => {
             }
         })
 
-    if (spotError(spot, res)) return;
-    if (isAuthorized(spot, user, res)) return;
+    if (spotNotFound(spot, res)) return;
+    if (notAuthorized(spot, user, res)) return;
 
     await spot.update({
         address: address,
@@ -334,12 +319,10 @@ router.delete('/:id', requireAuth, async (req, res) => {
         }
     })
 
-    if (spotError(spot, res)) return;
-    if (isAuthorized(spot, user, res)) return;
+    if (spotNotFound(spot, res)) return;
+    if (notAuthorized(spot, user, res)) return;
 
-    await spot.destroy()
-
-    res.json({"message": "Successfully deleted"})
+    await spot.destroy().then(() => res.json({"message": "Successfully deleted"})) 
 })
 
 // get reviews by a spots id
@@ -352,7 +335,7 @@ router.get('/:id/reviews', async (req, res) => {
         }
     })
 
-    if (spotError(spot, res)) return;
+    if (spotNotFound(spot, res)) return;
 
     await Review.findAll({
         where: {
@@ -384,7 +367,7 @@ router.post('/:id/reviews', requireAuth, validReview, async (req, res) => {
         }
     })
 
-   if (spotError(spot, res)) return;
+   if (spotNotFound(spot, res)) return;
     
    const reviewed = await Review.findOne({
         where:{
@@ -392,19 +375,19 @@ router.post('/:id/reviews', requireAuth, validReview, async (req, res) => {
             userId: user.id
         }
     }) 
-        if(reviewed) {
-          return res.status(403).json({message: "User already has a review for this spot"})
-        } else {
-            await Review.create({
-                spotId: id,
-                userId: user.id,
-                review: review,
-                stars: stars
+    if(reviewed) {
+        return res.status(403).json({message: "User already has a review for this spot"})
+    } else {
+        await Review.create({
+            spotId: id,
+            userId: user.id,
+            review: review,
+            stars: stars
             })
         
-            await Review.findAll({
-                order: [['id', 'DESC']],
-                limit: 1
+        await Review.findAll({
+            order: [['id', 'DESC']],
+            limit: 1
             }).then(review => res.json(...review))
         }
   })
@@ -419,22 +402,21 @@ router.get('/:id/bookings', requireAuth, async (req, res) => {
         }
     })
 
-    if (spotError(spot, res)) return;
+    if (spotNotFound(spot, res)) return;
 
     let bookings;
     if (spot.ownerId == user.id) {
-       bookings = await spot.getBookings({
-        include: {
-            model: User,
-            attributes: ['id', 'firstName', 'lastName']
-        }
-       }) 
+        bookings = await spot.getBookings({
+            include: {
+                model: User,
+                attributes: ['id', 'firstName', 'lastName']
+            }
+        }) 
     } else {
         bookings = await spot.getBookings({
             attributes: ['spotId', 'startDate', 'endDate']
         })
     }
-
     return res.json({'Bookings': bookings})
 })
 
@@ -449,7 +431,7 @@ router.post('/:id/bookings', requireAuth, async (req, res) => {
         }
     })
 
-    if(spotError(spot, res)) return;
+    if(spotNotFound(spot, res)) return;
     if (spot.ownerId == user.id) return res.status(403).json({message: 'Forbidden'})
 
     if (await isBooked(spot, startDate, endDate, res)) return;
