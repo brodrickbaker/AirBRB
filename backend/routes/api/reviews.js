@@ -41,10 +41,7 @@ router.get('/current', requireAuth, async (req, res) => {
     reviews = reviews.map(review => {
         review = review.toJSON()
         const spot = review.Spot
-        preview(spot)
-        if (spot.previewImage){
-             review.Spot.previewImage = spot.previewImage
-        } else review.Spot.previewImage = null;
+        review.Spot.previewImage = preview(spot)
         delete review.Spot.SpotImages
         return review
     })
