@@ -63,11 +63,10 @@ const preview = spot => {
   if (images.length) {
       for (let i = 0; i < images.length; i++) {
           if (images[i].preview) {
-              spot.previewImage = images[i].url
+             return spot.previewImage = images[i].url
           }
       }
-  } else spot.previewImage = null
-  return
+  } else return spot.previewImage = null
 }
 
 module.exports = {
