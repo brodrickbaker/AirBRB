@@ -23,7 +23,6 @@ router.get('/current', requireAuth, async (req, res) => {
 
     bookings = bookings.map(booking => {
         const spot = booking.Spot;
-        preview(spot)
         bookingPayload = {
             id: booking.id,
             spotId: booking.spotId,
@@ -38,7 +37,7 @@ router.get('/current', requireAuth, async (req, res) => {
                 lng: spot.lng,
                 name: spot.name,
                 price: spot.price,
-                previewImage: spot.previewImage
+                previewImage: preview(spot)
             },
             userId: booking.userId,
             startDate: booking.startDate,

@@ -25,7 +25,6 @@ const craftedSpots = spots => {
         spot.avgRating = totalStars/reviews.length
     })
        return spots.map(spot => {
-        preview(spot)
         let payload = {
             id: spot.id,
             ownerId: spot.ownerId,
@@ -41,7 +40,7 @@ const craftedSpots = spots => {
             createdAt: spot.createdAt,
             updatedAt: spot.updatedAt,
             avgRating: spot.avgRating,
-            previewImage: spot.previewImage 
+            previewImage: preview(spot) 
         }
         return payload
     })

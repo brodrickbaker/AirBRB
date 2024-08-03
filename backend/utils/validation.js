@@ -60,13 +60,14 @@ const isBooked = async (spot, startDate, endDate, res) => {
 // get preview image
 const preview = spot => {
   const images = spot.SpotImages
-  if (images.length) {
-      for (let i = 0; i < images.length; i++) {
+  if (images.length) { 
+    for (let i = 0; i < images.length; i++) {
           if (images[i].preview) {
-             return spot.previewImage = images[i].url
+            return images[i].url
           }
       }
-  } else return spot.previewImage = null
+  } 
+  return null
 }
 
 module.exports = {
