@@ -10,33 +10,47 @@ const { Op } = require('sequelize');
 const notAuthorized = (spot, user, res) => {
     if (spot.ownerId !== user.id) return res.status(403).json({message: 'Forbidden'})
 }
-
 // error handling for spot not found
 const spotNotFound = (spot, res) => {
-    if(!spot) {
-        let err = new Error('Spot couldn\'t be found')
-        res.status(404)
-        return res.json({message: err.message})
-    }
+    if(!spot) return res.status(404).json({message: 'Spot couldn\'t be found'})
   }
-// find avg rating
-const getAvg = spots => {
+// construct response for get all spots
+const craftedSpots = spots => {
+    // find avg rating
     spots.forEach(spot => {
-      const reviews = spot.Reviews 
-      const totalStars = reviews.reduce((acc, review) => {
-        return acc + review.stars
-    }, 0)
-      const avg = totalStars/reviews.length
-      spot.avgRating = avg
-      return
+        const reviews = spot.Reviews 
+        const totalStars = reviews.reduce((acc, review) => {
+            return acc + review.stars
+        }, 0)
+        spot.avgRating = totalStars/reviews.length
     })
-    }
+       return spots.map(spot => {
+        preview(spot)
+        let payload = {
+            id: spot.id,
+            ownerId: spot.ownerId,
+            address: spot.address,
+            city: spot.city,
+            state: spot.state,
+            country: spot.country,
+            lat: spot.lat,
+            lng: spot.lng,
+            name: spot.name,
+            description: spot.description,
+            price: spot.price,
+            createdAt: spot.createdAt,
+            updatedAt: spot.updatedAt,
+            avgRating: spot.avgRating,
+            previewImage: spot.previewImage 
+        }
+        return payload
+    })
+}
 
  // get all spots with reviews and images
 router.get('/', async (req, res) => {
-    let {page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query
-    const where = {}
-    
+    let { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query
+    const where = {}   
     const setParams = (min, max, attr) => {
         if (min && max) {
             where[attr] = { 
@@ -45,10 +59,11 @@ router.get('/', async (req, res) => {
                     [Op.lt]: max
                 }
             }
-        } 
-        else if (min) {
+        } else if (min) {
             where[attr] = { [Op.gt]: min }
-        } else if (max) where[attr] = { [Op.lt]: max }
+        } else if (max) {
+            where[attr] = { [Op.lt]: max }
+        }
         return
     }
     
@@ -68,8 +83,7 @@ router.get('/', async (req, res) => {
         size = parseInt(size)
       }
 
-    const allSpots = await Spot.findAll(
-        {
+    const allSpots = await Spot.findAll({
             where: where,
             include: [
                 {model: Review},
@@ -77,34 +91,10 @@ router.get('/', async (req, res) => {
             ],
             limit: size,
             offset: size * (page - 1)
-        }
-    );
+        });
     
-    getAvg(allSpots)
-    // construct response
-    const craftedSpots = allSpots.map(spot => {
-        preview(spot)
-        let payload = {
-            id: spot.id,
-            ownerId: spot.ownerId,
-            address: spot.address,
-            city: spot.city,
-            state: spot.state,
-            country: spot.country,
-            lat: spot.lat,
-            lng: spot.lng,
-            name: spot.name,
-            description: spot.description,
-            price: spot.price,
-            createdAt: spot.createdAt,
-            updatedAt: spot.updatedAt,
-            avgRating: spot.avgRating,
-            previewImage: spot.previewImage 
-        }
-        return payload
-    })
     return res.json({
-        'Spots': craftedSpots,
+        'Spots': craftedSpots(allSpots),
         'page': page,
         'size': size
     })
@@ -122,30 +112,8 @@ router.get('/current', requireAuth, async (req, res) => {
             {model: SpotImage}
         ]
     })
-    getAvg(userSpots)
 
-    const craftedSpots = userSpots.map(spot => {
-        preview(spot)
-        let payload = {
-            id: spot.id,
-            ownerId: spot.ownerId,
-            address: spot.address,
-            city: spot.city,
-            state: spot.state,
-            country: spot.country,
-            lat: spot.lat,
-            lng: spot.lng,
-            name: spot.name,
-            description: spot.description,
-            price: spot.price,
-            createdAt: spot.createdAt,
-            updatedAt: spot.updatedAt,
-            avgRating: spot.avgRating,
-            previewImage: spot.previewImage 
-        }
-        return payload
-    })
-    return res.json({'Spots': craftedSpots})
+    return res.json({'Spots': craftedSpots(userSpots)})
 })
 
 //get spot by spot id
@@ -352,7 +320,6 @@ router.get('/:id/reviews', async (req, res) => {
             }
         ]
     }).then(reviews => res.json({"Reviews": reviews}))
-
 })
 
 // Create a review for a spot based on spot's id

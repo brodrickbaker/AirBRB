@@ -1,21 +1,17 @@
 const router = require('express').Router();
+const e = require('express');
 const { Spot, SpotImage, Booking } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
 const { isBooked, preview } = require('../../utils/validation');
 
 // error handling for booking not found
 const bookingNotFound = (booking, res) => {
-    if(!booking) {
-        let err = new Error('Booking couldn\'t be found')
-        res.status(404)
-        return res.json({message: err.message})
-    }
+    if(!booking) return res.status(404).json({message: 'Booking couldn\'t be found'})
   }
 // get all bookings from current user
 router.get('/current', requireAuth, async (req, res) => {
     const { user } = req
-    let bookings = await user.getBookings(
-        {
+    let bookings = await user.getBookings({
             include: 
             {
                 model: Spot,
@@ -65,15 +61,21 @@ router.put('/:id', requireAuth, async (req, res) => {
             id: id
         }
     })
-    if (bookingNotFound(booking, res)) return;
-    if (booking.userId !== user.id) return res.status(403).json({message: 'Forbidden'});
-    if (new Date(booking.endDate) < new Date()) return res.status(403).json({message: "Past bookings can't be modified" })
+    
+    if (bookingNotFound(booking, res)) {
+        return;
+    } else if (booking.userId !== user.id) {
+        return res.status(403).json({message: 'Forbidden'});
+    } else if (new Date(booking.endDate) < new Date()) {
+        return res.status(403).json({message: "Past bookings can't be modified" });
+    }
     
     const spot = await Spot.findOne({
         where: {
             id: booking.spotId
         }
     })
+
     if ((new Date(startDate) && new Date(endDate)) >= booking.startDate && (new Date(startDate) && new Date(endDate)) <= booking.endDate) {
     } else if (new Date(startDate) < booking.startDate && new Date(endDate) > booking.endDate){
     } else if (await isBooked(spot, startDate, endDate, res)) return;
@@ -88,7 +90,6 @@ router.put('/:id', requireAuth, async (req, res) => {
     } catch (err) {
         return res.status(400).json({ message: err.message })
     }
-
 })
 
 // delete a booking
@@ -103,12 +104,14 @@ router.delete('/:id', requireAuth, async (req, res) => {
             model: Spot
         }
     })
-    if (bookingNotFound(booking, res)) return;
-    if (booking.userId !== user.id && booking.Spot.ownerId !== user.id) return res.status(403).json({message: 'Forbidden'}); 
-    if (new Date(booking.startDate) < new Date()) return res.status(403).json({message: "Bookings that have been started can't be deleted" })
-   
-    await booking.destroy().then(() => res.json({message: 'Successfully deleted'}))
-        
+    
+    if (bookingNotFound(booking, res)) {
+        return;
+    } else if (booking.userId !== user.id && booking.Spot.ownerId !== user.id) {
+        return res.status(403).json({message: 'Forbidden'});
+    } else if (new Date(booking.startDate) < new Date()) {
+        return res.status(403).json({message: "Bookings that have been started can't be deleted" });
+    } else await booking.destroy().then(() => res.json({message: 'Successfully deleted'}))    
 })
 
 module.exports = router;

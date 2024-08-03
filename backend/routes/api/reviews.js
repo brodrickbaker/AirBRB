@@ -4,11 +4,7 @@ const { requireAuth } = require('../../utils/auth');
 const { validReview, preview } = require('../../utils/validation');
 
 const reviewNotFound = (review, res) => {
-    if (!review){
-        const err = new Error ("Review couldn't be found") 
-        res.status(404)
-        return res.json({message:err.message})
-    }
+    if (!review) return res.status(404).json({message:"Review couldn't be found"})
 }
 // authorized user check
 const notAuthorized = (review, user, res) => {
@@ -17,12 +13,7 @@ const notAuthorized = (review, user, res) => {
 
 // get all reviews of current user
 router.get('/current', requireAuth, async (req, res) => {
-    let { user } = req
-    user = await User.findOne({
-      where: {
-        id: user.id
-      }
-    })
+    const { user } = req
     let reviews = await Review.findAll({
         where: {
             userId: user.id
@@ -100,7 +91,6 @@ router.put('/:id', requireAuth, validReview, async (req, res) => {
     const { user } = req
     const { id } = req.params
     const { review, stars } = req.body
-
     const userReview = await Review.findOne({
         where: {
             id: id
@@ -112,8 +102,7 @@ router.put('/:id', requireAuth, validReview, async (req, res) => {
 
     await userReview.update({
         review: review,
-        stars: stars,
-        updatedAt: new Date()
+        stars: stars
     })
 
     await Review.findOne({
