@@ -5,6 +5,15 @@ const { requireAuth } = require('../../utils/auth');
 const { validateSpot, validateReview, isBooked, preview, notFound, notAuthorized } = require('../../utils/checks')
 const { Op } = require('sequelize');
 
+//find a spot by id
+const getSpot = async id => {
+   return await Spot.findOne({
+        where: {
+            id: id
+        }
+    })
+}
+
 // find avg star rating for a spot
 const avgRating = spot => {
     const reviews = spot.Reviews 
@@ -67,8 +76,8 @@ router.get('/', async (req, res) => {
     const allSpots = await Spot.findAll({
             where: where,
             include: [
-                {model: Review},
-                {model: SpotImage}
+                { model: Review },
+                { model: SpotImage }
             ],
             limit: size,
             offset: size * (page - 1)
@@ -89,8 +98,8 @@ router.get('/current', requireAuth, async (req, res) => {
             ownerId: user.id,
         }, 
         include: [
-            {model: Review},
-            {model: SpotImage}
+            { model: Review },
+            { model: SpotImage }
         ]
     })
 
@@ -99,7 +108,7 @@ router.get('/current', requireAuth, async (req, res) => {
 
 //get spot by spot id
 router.get('/:id', async (req, res)=> {
-    const {id} = req.params
+    const { id } = req.params
     let spot = await Spot.findOne({
         where: {
             id: id
@@ -132,7 +141,7 @@ router.post('/', requireAuth, validateSpot, async (req, res) => {
     
     await Spot.create(
         {
-            ownerId: user.dataValues.id,
+            ownerId: user.id,
             address: address,
             city: city,
             state: state,
@@ -152,16 +161,13 @@ router.post('/', requireAuth, validateSpot, async (req, res) => {
         }
     ).then(spot => res.json(...spot)) 
 })
+
 // add an image to a spot by id
 router.post('/:spotId/images', requireAuth, async (req, res) => {
     const { user } = req
     const { spotId } = req.params
     const { url, preview } = req.body
-    const spot = await Spot.findOne({
-        where: {
-            id: spotId
-        }
-    })
+    const spot = await getSpot(spotId)
 
     if (notFound(spot, res, 'Spot')) return;
     if (notAuthorized(spot, user, res)) return;
@@ -180,17 +186,14 @@ router.post('/:spotId/images', requireAuth, async (req, res) => {
         }
     ).then(image => res.json(...image))  
 })
+
 // edit a spot by id
 router.put('/:id', requireAuth, validateSpot, async (req, res) => {
     const { user } = req
     const { id } = req.params
     const { address, city, state, country, lat, lng, name, description, price } = req.body
 
-    let spot = await Spot.findOne({
-            where: {
-                id: id              
-            }
-        })
+    const spot = await getSpot(id)
 
     if (notFound(spot, res, 'Spot')) return;
     if (notAuthorized(spot, user, res)) return;
@@ -207,22 +210,15 @@ router.put('/:id', requireAuth, validateSpot, async (req, res) => {
         price: price
     })
 
-    await Spot.findOne({
-        where: {
-            id: id
-        }
-    }).then(spot => res.json(spot))
+    await getSpot(id).then(spot => res.json(spot))
 })
+
 // delete a spot by id
 router.delete('/:id', requireAuth, async (req, res) => {
     const { user } = req
     const { id } = req.params
     
-    let spot = await Spot.findOne({
-        where: {
-            id: id
-        }
-    })
+    const spot = await getSpot(id)
 
     if (notFound(spot, res, 'Spot')) return;
     if (notAuthorized(spot, user, res)) return;
@@ -234,11 +230,7 @@ router.delete('/:id', requireAuth, async (req, res) => {
 router.get('/:id/reviews', async (req, res) => {
     const { id } = req.params
     
-    let spot = await Spot.findOne({
-        where: {
-            id: id
-        }
-    })
+    const spot = await getSpot(id)
 
     if (notFound(spot, res, 'Spot')) return;
 
@@ -265,17 +257,13 @@ router.post('/:id/reviews', requireAuth, validateReview, async (req, res) => {
     const { id } = req.params
     const { review, stars } = req.body
 
-    let spot = await Spot.findOne({
-        where: {
-            id: id
-        }
-    })
+    const spot = await getSpot(id)
 
-   if (notFound(spot, res, 'Spot')) return;
+    if (notFound(spot, res, 'Spot')) return;
     
-   const reviewed = await Review.findOne({
+    const reviewed = await Review.findOne({
         where:{
-            spotId: id,
+            spotId: spot.id,
             userId: user.id
         }
     }) 
@@ -300,11 +288,7 @@ router.post('/:id/reviews', requireAuth, validateReview, async (req, res) => {
 router.get('/:id/bookings', requireAuth, async (req, res) => {
     const { id } = req.params
     const { user } = req
-    const spot  = await Spot.findOne({
-        where: {
-            id: id
-        }
-    })
+    const spot  = await getSpot(id)
 
     if (notFound(spot, res, 'Spot')) return;
 
@@ -325,11 +309,7 @@ router.post('/:id/bookings', requireAuth, async (req, res) => {
     const { id } = req.params
     const { user } = req
     let { startDate, endDate } = req.body
-    const spot = await Spot.findOne({
-        where: {
-            id: id
-        }
-    })
+    const spot = await getSpot(id)
 
     if (notFound(spot, res, 'Spot')) return;
     if (spot.ownerId == user.id) return res.status(403).json({message: 'Forbidden'})

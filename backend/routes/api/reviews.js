@@ -3,6 +3,14 @@ const { Spot, Review, ReviewImage, User, SpotImage } = require('../../db/models'
 const { requireAuth } = require('../../utils/auth');
 const { validateReview, preview, notFound, notAuthorized } = require('../../utils/checks');
 
+const getReview = async id => {
+    return await Review.findOne({
+        where: {
+            id: id
+        }
+    })
+}
+
 // get all reviews of current user
 router.get('/current', requireAuth, async (req, res) => {
     const { user } = req
@@ -37,18 +45,16 @@ router.get('/current', requireAuth, async (req, res) => {
         delete review.Spot.SpotImages
         return review
     })
+
     return res.json({"Reviews": reviews})
   })
+
 // add image to review based on review id
 router.post('/:id/images', requireAuth, async (req, res) => {
     const { user } = req
     const { id } = req.params
     const { url } = req.body
-    const review = await Review.findOne({
-        where: {
-            id: id
-        }
-    })
+    const review = await getReview(id)
 
     if (notFound(review, res, 'Review')) return;
     if (notAuthorized(review, user, res)) return;
@@ -80,11 +86,7 @@ router.put('/:id', requireAuth, validateReview, async (req, res) => {
     const { user } = req
     const { id } = req.params
     const { review, stars } = req.body
-    const userReview = await Review.findOne({
-        where: {
-            id: id
-        }
-    })
+    const userReview = await getReview(id)
 
     if (notFound(userReview, res, 'Review')) return;
     if (notAuthorized(userReview, user, res)) return;
@@ -94,20 +96,14 @@ router.put('/:id', requireAuth, validateReview, async (req, res) => {
         stars: stars
     })
 
-    await Review.findOne({
-        where: { id: id }
-    }).then(updatedReview => res.json(updatedReview))
+    await getReview(id).then(updatedReview => res.json(updatedReview))
 })
 
 //delete an existing review
 router.delete('/:id', requireAuth, async (req, res) => {
     const { user } = req
     const { id } = req.params
-    const userReview = await Review.findOne({
-        where: {
-            id: id
-        }
-    })
+    const userReview = await getReview(id)
 
     if (notFound(userReview, res, 'Review')) return;
     if (notAuthorized(userReview, user, res)) return;
