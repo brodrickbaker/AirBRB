@@ -2,12 +2,8 @@ const router = require('express').Router();
 const e = require('express');
 const { Spot, SpotImage, Booking } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
-const { isBooked, preview } = require('../../utils/validation');
+const { isBooked, preview, notFound, notAuthorized } = require('../../utils/checks');
 
-// error handling for booking not found
-const bookingNotFound = (booking, res) => {
-    if(!booking) return res.status(404).json({message: 'Booking couldn\'t be found'})
-  }
 // get all bookings from current user
 router.get('/current', requireAuth, async (req, res) => {
     const { user } = req
@@ -23,7 +19,6 @@ router.get('/current', requireAuth, async (req, res) => {
 
     bookings = bookings.map(booking => {
         const spot = booking.Spot;
-        preview(spot)
         bookingPayload = {
             id: booking.id,
             spotId: booking.spotId,
@@ -38,7 +33,7 @@ router.get('/current', requireAuth, async (req, res) => {
                 lng: spot.lng,
                 name: spot.name,
                 price: spot.price,
-                previewImage: spot.previewImage
+                previewImage: preview(spot)
             },
             userId: booking.userId,
             startDate: booking.startDate,
@@ -62,11 +57,9 @@ router.put('/:id', requireAuth, async (req, res) => {
         }
     })
     
-    if (bookingNotFound(booking, res)) {
-        return;
-    } else if (booking.userId !== user.id) {
-        return res.status(403).json({message: 'Forbidden'});
-    } else if (new Date(booking.endDate) < new Date()) {
+    if (notFound(booking, res, 'Booking')) return;
+    if (notAuthorized(booking, user, res)) return;
+    if (new Date(booking.endDate) < new Date()) {
         return res.status(403).json({message: "Past bookings can't be modified" });
     }
     
@@ -105,7 +98,7 @@ router.delete('/:id', requireAuth, async (req, res) => {
         }
     })
     
-    if (bookingNotFound(booking, res)) {
+    if (notFound(booking, res, 'Booking')) {
         return;
     } else if (booking.userId !== user.id && booking.Spot.ownerId !== user.id) {
         return res.status(403).json({message: 'Forbidden'});

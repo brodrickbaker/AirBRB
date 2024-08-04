@@ -1,15 +1,7 @@
 const router = require('express').Router();
 const { Spot, Review, ReviewImage, User, SpotImage } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
-const { validReview, preview } = require('../../utils/validation');
-
-const reviewNotFound = (review, res) => {
-    if (!review) return res.status(404).json({message:"Review couldn't be found"})
-}
-// authorized user check
-const notAuthorized = (review, user, res) => {
-    if (user.id !== review.userId) return res.status(403).json({message: 'Forbidden'})
-}
+const { validateReview, preview, notFound, notAuthorized } = require('../../utils/checks');
 
 // get all reviews of current user
 router.get('/current', requireAuth, async (req, res) => {
@@ -41,10 +33,7 @@ router.get('/current', requireAuth, async (req, res) => {
     reviews = reviews.map(review => {
         review = review.toJSON()
         const spot = review.Spot
-        preview(spot)
-        if (spot.previewImage){
-             review.Spot.previewImage = spot.previewImage
-        } else review.Spot.previewImage = null;
+        review.Spot.previewImage = preview(spot)
         delete review.Spot.SpotImages
         return review
     })
@@ -61,7 +50,7 @@ router.post('/:id/images', requireAuth, async (req, res) => {
         }
     })
 
-    if (reviewNotFound(review, res)) return;
+    if (notFound(review, res, 'Review')) return;
     if (notAuthorized(review, user, res)) return;
 
     const currentImages = await review.getReviewImages()
@@ -87,7 +76,7 @@ router.post('/:id/images', requireAuth, async (req, res) => {
 })
 
 // update an existing review
-router.put('/:id', requireAuth, validReview, async (req, res) => {
+router.put('/:id', requireAuth, validateReview, async (req, res) => {
     const { user } = req
     const { id } = req.params
     const { review, stars } = req.body
@@ -97,7 +86,7 @@ router.put('/:id', requireAuth, validReview, async (req, res) => {
         }
     })
 
-    if (reviewNotFound(userReview, res)) return;
+    if (notFound(userReview, res, 'Review')) return;
     if (notAuthorized(userReview, user, res)) return;
 
     await userReview.update({
@@ -120,7 +109,7 @@ router.delete('/:id', requireAuth, async (req, res) => {
         }
     })
 
-    if (reviewNotFound(userReview, res)) return;
+    if (notFound(userReview, res, 'Review')) return;
     if (notAuthorized(userReview, user, res)) return;
 
     await userReview.destroy().then(() => res.json({message: 'Successfully deleted'}))
