@@ -61,18 +61,9 @@ router.get('/', async (req, res) => {
     setParams(minLng, maxLng, 'lng');
     setParams(minPrice, maxPrice, 'price')
 
-    if (!page) {
-        page = 1;
-      } else {
-        page = parseInt(page);
-      }
-      
-    if (!size || size > 20) {
-        size = 20;
-      } else {
-        size = parseInt(size)
-      }
-
+    page = !page ? 1 : parseInt(page)
+    size = !size || size > 20 ? 20 : parseInt(size)
+ 
     const allSpots = await Spot.findAll({
             where: where,
             include: [
@@ -317,19 +308,15 @@ router.get('/:id/bookings', requireAuth, async (req, res) => {
 
     if (notFound(spot, res, 'Spot')) return;
 
-    let bookings;
-    if (spot.ownerId == user.id) {
-        bookings = await spot.getBookings({
-            include: {
-                model: User,
-                attributes: ['id', 'firstName', 'lastName']
-            }
-        }) 
-    } else {
-        bookings = await spot.getBookings({
+    const bookings = spot.ownerId == user.id ? await spot.getBookings({
+        include: {
+            model: User,
+            attributes: ['id', 'firstName', 'lastName']
+        }
+    }) : await spot.getBookings({
             attributes: ['spotId', 'startDate', 'endDate']
         })
-    }
+    
     return res.json({'Bookings': bookings})
 })
 
