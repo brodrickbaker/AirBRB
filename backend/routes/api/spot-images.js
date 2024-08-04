@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const { SpotImage, Spot } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
+const { notAuthorized, notFound } = require('../../utils/checks');
 
 // delete an image for a spot
 router.delete('/:id', requireAuth, async (req, res) => {
@@ -15,13 +16,10 @@ router.delete('/:id', requireAuth, async (req, res) => {
         }
     })
 
-    if (!spotImage) {
-        return res.status(404).json({message: "Spot Image couldn't be found"})
-    } else if (user.id !== spotImage.Spot.ownerId) {
-        return res.status(403).json({message: 'Forbidden'})
-    } else {
-        await spotImage.destroy().then(()=> res.json({message: 'Successfully deleted'}))
-    }
+    if (notFound(spotImage, res, 'Spot Image')) return
+    if (notAuthorized(spotImage.Spot, user, res)) return 
+  
+    await spotImage.destroy().then(()=> res.json({message: 'Successfully deleted'}))
 })
 
 module.exports = router;
