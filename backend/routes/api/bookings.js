@@ -19,7 +19,7 @@ router.get('/current', requireAuth, async (req, res) => {
 
     bookings = bookings.map(booking => {
         const spot = booking.Spot;
-        bookingPayload = {
+        return {
             id: booking.id,
             spotId: booking.spotId,
             Spot: {
@@ -41,7 +41,6 @@ router.get('/current', requireAuth, async (req, res) => {
             createdAt: booking.createdAt,
             updatedAt: booking.updatedAt
         }
-        return bookingPayload
     })
     return res.json({'Bookings': bookings})
 })
