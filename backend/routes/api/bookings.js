@@ -4,6 +4,18 @@ const { Spot, SpotImage, Booking } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
 const { isBooked, preview, notFound, notAuthorized } = require('../../utils/checks');
 
+// get booking by id
+const getBooking = async id => {
+    return await Booking.findOne({
+        where: {
+            id: id
+        }, 
+        include: {
+            model: Spot
+        }
+    })
+}
+
 // get all bookings from current user
 router.get('/current', requireAuth, async (req, res) => {
     const { user } = req
@@ -50,23 +62,13 @@ router.put('/:id', requireAuth, async (req, res) => {
     const { id } = req.params
     const { user } = req
     let { startDate, endDate } = req.body
-    const booking = await Booking.findOne({
-        where: {
-            id: id
-        }
-    })
-    
+    const booking = await getBooking(id)
+
     if (notFound(booking, res, 'Booking')) return;
     if (notAuthorized(booking, user, res)) return;
-    if (new Date(booking.endDate) < new Date()) {
-        return res.status(403).json({message: "Past bookings can't be modified" });
-    }
-    
-    const spot = await Spot.findOne({
-        where: {
-            id: booking.spotId
-        }
-    })
+    if (new Date(booking.endDate) < new Date()) return res.status(403).json({message: "Past bookings can't be modified" });
+
+    const spot = booking.Spot
 
     if ((new Date(startDate) && new Date(endDate)) >= booking.startDate && (new Date(startDate) && new Date(endDate)) <= booking.endDate) {
     } else if (new Date(startDate) < booking.startDate && new Date(endDate) > booking.endDate){
@@ -78,6 +80,11 @@ router.put('/:id', requireAuth, async (req, res) => {
             userId: user.id,
             startDate: startDate,
             endDate: endDate
+        })
+        await Booking.findOne({
+            where: {
+                id: id
+            }
         }).then(booking => res.json(booking))
     } catch (err) {
         return res.status(400).json({ message: err.message })
@@ -88,15 +95,8 @@ router.put('/:id', requireAuth, async (req, res) => {
 router.delete('/:id', requireAuth, async (req, res) => {
     const { id } = req.params
     const { user } = req
-    const booking = await Booking.findOne({
-        where: {
-            id: id
-        }, 
-        include: {
-            model: Spot
-        }
-    })
-    
+    const booking = await getBooking(id)
+
     if (notFound(booking, res, 'Booking')) {
         return;
     } else if (booking.userId !== user.id && booking.Spot.ownerId !== user.id) {

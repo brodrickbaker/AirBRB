@@ -217,7 +217,6 @@ router.put('/:id', requireAuth, validateSpot, async (req, res) => {
 router.delete('/:id', requireAuth, async (req, res) => {
     const { user } = req
     const { id } = req.params
-    
     const spot = await getSpot(id)
 
     if (notFound(spot, res, 'Spot')) return;
@@ -228,8 +227,7 @@ router.delete('/:id', requireAuth, async (req, res) => {
 
 // get reviews by a spots id
 router.get('/:id/reviews', async (req, res) => {
-    const { id } = req.params
-    
+    const { id } = req.params  
     const spot = await getSpot(id)
 
     if (notFound(spot, res, 'Spot')) return;
@@ -256,7 +254,6 @@ router.post('/:id/reviews', requireAuth, validateReview, async (req, res) => {
     const { user } = req
     const { id } = req.params
     const { review, stars } = req.body
-
     const spot = await getSpot(id)
 
     if (notFound(spot, res, 'Spot')) return;
