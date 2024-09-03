@@ -1,5 +1,4 @@
 const router = require('express').Router();
-const e = require('express');
 const { Spot, SpotImage, Booking } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
 const { isBooked, preview, notFound, notAuthorized } = require('../../utils/checks');
