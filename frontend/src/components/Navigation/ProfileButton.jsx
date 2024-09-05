@@ -1,27 +1,49 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
-import { CgProfile } from "react-icons/cg";
+import { CgProfile, CgLogOut } from "react-icons/cg";
 import * as sessionActions from '../../store/session';
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
+  const [showMenu, setShowMenu] = useState(false);
+  const ulRef = useRef();  
 
   const logout = (e) => {
     e.preventDefault();
     dispatch(sessionActions.logout());
   };
 
+  const toggleMenu = (e) => {
+    e.stopPropagation(); 
+    setShowMenu(!showMenu);
+  };
+
+  useEffect(() => {
+    if (!showMenu) return;
+
+    const closeMenu = (e) => {
+        if (ulRef.current && !ulRef.current.contains(e.target)) {
+            setShowMenu(false);
+          }
+    };
+
+    document.addEventListener('click', closeMenu);
+
+    return () => document.removeEventListener("click", closeMenu);
+  }, [showMenu]);
+
+  const ulClassName = 'profile-dropdown' + (showMenu ? '' : ' hidden')
   return (
     <>
-      <button>
+      <button onClick={toggleMenu}>
         <CgProfile />
       </button>
-      <ul className="profile-dropdown">
+      <ul className={ulClassName} ref={ulRef}>
         <li>{user.username}</li>
         <li>{user.firstName} {user.lastName}</li>
         <li>{user.email}</li>
         <li>
-          <button onClick={logout}>Log Out</button>
+          <button onClick={logout}><CgLogOut /></button>
         </li>
       </ul>
     </>
