@@ -1,3 +1,10 @@
 .hidden {
     display: none;
 }
+
+.modal-button:hover {
+    background-color:   #E8F0FE;
+    text-decoration: underline;
+    cursor: pointer;
+    width: 25%;
+}
