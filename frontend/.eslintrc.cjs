@@ -12,10 +12,6 @@ module.exports = {
   plugins: ['react-refresh'],
   ignorePatterns: ['dist', 'node_modules'],
   rules: {
-    'react-refresh/only-export-components': [
-      'warn',
-      { allowConstantExport: true },
-    ],
     'react/prop-types': 'off'
   },
   overrides: [
