@@ -8,3 +8,7 @@
     cursor: pointer;
     width: 25%;
 }
+
+ul {
+    list-style: none;
+}
