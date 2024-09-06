@@ -1,6 +1,8 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { getSpots } from '../../store/spot';
 import { useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
+import './Gallery.css'
 
 const Gallery = () => {
   
@@ -11,19 +13,26 @@ const Gallery = () => {
     dispatch(getSpots())
   }, [dispatch])
   
-  console.log(allSpots)
     return (
     <div >
       <h1>Welcome!</h1>
-      <div>{Object.values(allSpots).map(spot => {
+      <ul className='gallery card'>{Object.values(allSpots).map(spot => {
         return (
-          <img src={spot.previewImage} 
-          key={spot.id} 
-          alt={spot.name}
-          className="card"
-          />
+          <li key={spot.id}>
+            <NavLink to={`spots/${spot.id}`}>
+              <img src={spot.previewImage}  
+              alt={spot.name}
+              className="card"
+              />
+            </NavLink>
+            <div className='info'>
+              <h3>{spot.city}, {spot.state}</h3>
+              <h3> ⭐{spot.avgRating} </h3>
+              <h3><br/>${spot.price} night</h3>
+            </div>
+          </li>  
         )}
-      )}</div>
+      )}</ul>
     </div>
   )
 };

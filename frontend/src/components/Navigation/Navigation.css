@@ -10,9 +10,6 @@
     color: black;
 }
 
-ul {
-    list-style: none;
-}
-body {
-    width: 15%
-}
+/* .nav > li {
+    display: block;
+} */

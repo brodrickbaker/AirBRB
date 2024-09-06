@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef} from 'react';
 import { useDispatch } from 'react-redux';
-import { CgProfile, CgLogOut } from "react-icons/cg";
+import { CgProfile, CgLogOut, CgMenu } from "react-icons/cg";
 import * as sessionActions from '../../store/session';
 import OpenModalButton from '../OpenModalButton';
 import LoginFormModal from '../LoginFormModal';
@@ -40,7 +40,7 @@ function ProfileButton({ user }) {
     return (
     <>
       <button className='btn' onClick={toggleMenu}>
-        <CgProfile />
+        <CgMenu /><CgProfile />
       </button>
       <ul className={ulClassName} ref={ulRef}>
         {user ? (

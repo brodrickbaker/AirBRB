@@ -7,13 +7,20 @@ const load = spots => ({
   });
 
   export const getSpots = () => async dispatch => {
-    const response = await fetch(`/api/spots`);
-    if (response.ok) {
-      const list = await response.json();
+    const res = await fetch(`/api/spots`);
+    if (res.ok) {
+      const list = await res.json();
       dispatch(load(list.Spots));
     }
   };
   
+//   export const getOneSpot = id => async () => {
+//     const res = await fetch(`/api/spots/${id}`);
+//     if (res.ok) {
+//       const spot = await res.json();
+//       return spot
+//     }
+//   }
 
 const spotReducer = (state = {}, action) => {
     switch (action.type) {

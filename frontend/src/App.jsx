@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import * as sessionActions from './store/session';
 import Navigation from './components/Navigation';
 import Gallery from './components/Gallery';
+import ShowSpot from './components/ShowSpot';
 
 function Layout() {
   const dispatch = useDispatch();
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
       {
         path: '/',
         element: <Gallery />
+      },
+      {
+        path: '/spots/:spotId',
+        element: <ShowSpot />
       }
     ]
   }
