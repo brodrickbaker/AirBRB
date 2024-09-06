@@ -39,7 +39,7 @@ function ProfileButton({ user }) {
     const ulClassName = 'profile-dropdown' + (showMenu ? '' : ' hidden')
     return (
     <>
-      <button onClick={toggleMenu}>
+      <button className='btn' onClick={toggleMenu}>
         <CgProfile />
       </button>
       <ul className={ulClassName} ref={ulRef}>
@@ -49,7 +49,7 @@ function ProfileButton({ user }) {
             <li>{user.firstName} {user.lastName}</li>
             <li>{user.email}</li>
             <li>
-              <button onClick={logout}><CgLogOut/></button>
+              <button onClick={logout} className='btn'><CgLogOut/></button>
             </li>
           </>
         ) : (

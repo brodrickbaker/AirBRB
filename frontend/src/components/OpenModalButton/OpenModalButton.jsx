@@ -14,7 +14,7 @@ function OpenModalButton({
     if (typeof onButtonClick === "function") onButtonClick();
   };
 
-  return (<li className='modal-button' onClick={onClick}>{buttonText}</li>);
+  return (<li className='modal-item' onClick={onClick}>{buttonText}</li>);
 }
 
 export default OpenModalButton;

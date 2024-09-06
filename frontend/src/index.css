@@ -1,1 +1,126 @@
-/* TODO: Add sitewide styles */
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Georama:ital,wght@0,100..900;1,100..900&family=Tajawal:wght@200;300;400;500;700;800;900&display=swap');
+
+* {
+    font-family: "Tajawal", sans-serif;
+    color: rgb(255, 249, 242);
+}
+
+body {
+    background-color: #262020;
+}
+h1, h4 {
+    font-family: "DM Serif Display", serif;
+    color: #458aeb;    
+}
+
+h2, h5 {
+    font-family: "Georama", sans-serif;
+    color: #2a6cc8;
+}
+a {
+    text-decoration: none;
+    color: #a3a3a3;
+}
+a:hover {
+    color: #faeded;
+}
+.btn {
+    background: linear-gradient(190deg, #e86b6b, #e13c3c ,#DB0000);
+    border: 1px solid rgb(0, 0, 0);
+    border-radius: 25px;
+    padding: 5px 5px 2px 5px;
+    margin: 5px 2px;
+    font-weight: 600;
+    color: #faeded;
+    display: flex;
+    width: 75%;
+    justify-content: center;
+}
+.btn:hover {
+    background: #e13c3c;
+}
+
+.btn:active {
+    border: 1px solid white;
+    background-color: #DB0000;
+}
+
+.nav {
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    background-color: #332B2B;
+    border-radius: 10px;
+}
+
+.active {
+    font-weight: bold;
+    text-shadow: 2px 2px #000000;
+    color: #faeded;
+}
+
+.disabled {
+    font-weight: bold;
+    color:black;
+}
+.disabled:hover{
+    color:black;
+}
+
+img {
+    background-color: #faeded;
+    box-shadow: 0 0 8px #f9f6f6;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.card{
+    background-color: #332B2B;
+    border-radius: 10px;
+    border: 1px solid black;
+    padding: 10px;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 5px #f9f6f6;
+
+}
+input, select, option {
+    color: #332B2B;
+    background-color: #faeded;
+}
+
+.alert {
+    color: rgb(233, 180, 45);
+    font-family: "DM Serif Display", sans-serif;
+    font-weight: bold;
+}
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #332B2B;
+    border-radius: 10px;
+    width: fit-content;
+    box-shadow: 0 0 5px #f9f6f6;
+    border: 1px solid black;
+    margin: 10px;
+}
+form > div {
+    padding: 5px 10px;
+}
+
+@media screen and (max-width:1000px) {
+ 
+    .nav {
+        flex-direction: column;
+    }
+    body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    * {
+        flex-grow: 1;
+    }
+}

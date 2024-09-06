@@ -9,9 +9,9 @@ function Navigation({ isLoaded }){
 
   return (
     <>
-        <ul>
+        <ul className="nav">
             <li>
-                <NavLink to="/"><FaAirbnb/></NavLink>
+                <NavLink to="/"><FaAirbnb/>airBRB</NavLink>
             </li>
             {isLoaded && (<li>
                 <ProfileButton user={sessionUser} />

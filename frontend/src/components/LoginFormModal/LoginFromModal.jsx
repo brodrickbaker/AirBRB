@@ -26,7 +26,7 @@ const LoginFormModal = () => {
     return (
         <>
         <h1>Log In</h1>
-        <form onSubmit={handleSubmit}>
+        <form className='card' onSubmit={handleSubmit}>
           <label>
             Username or Email
             <input
@@ -46,7 +46,7 @@ const LoginFormModal = () => {
             />
           </label>
           {errors.credential && <p>{errors.credential}</p>}
-          <button type="submit">Log In</button>
+          <button type="submit" className='btn'>Log In</button>
         </form>
       </>
     )

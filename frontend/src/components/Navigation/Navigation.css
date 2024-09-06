@@ -2,13 +2,17 @@
     display: none;
 }
 
-.modal-button:hover {
+.modal-item:hover {
     background-color:   #E8F0FE;
     text-decoration: underline;
     cursor: pointer;
-    width: 25%;
+    width: 50%;
+    color: black;
 }
 
 ul {
     list-style: none;
+}
+body {
+    width: 15%
 }
