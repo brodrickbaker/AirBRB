@@ -1,14 +1,29 @@
 import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from "react-redux";
+import { getOneSpot } from "../../store/spot";
 import './ShowSpot.css'
+import CalloutBox from "../CalloutBox";
+import ShowReviews from "../ShowReviews";
 
 const ShowSpot = () => {
   const {spotId} = useParams();
-  const spot = useSelector(state => state.spot[spotId])
+  const dispatch = useDispatch()
+  const spot = useSelector(state => state.spot.spot)
+  
+  useEffect(() => {
+    dispatch(getOneSpot(spotId))
+  }, [dispatch, spotId])
 
     return (
     <div>
       <h1>{spot.name}</h1>
+      <h2>{spot.city}, {spot.state}, {spot.country}</h2>
+      <img src={spot.SpotImages.find(image => image.preview).url}></img>
+      <h3>Hosted By {spot.Owner.firstName} {spot.Owner.lastName}</h3>
+      <p>{spot.description}</p>
+      <CalloutBox spot={spot} />
+      <ShowReviews spot={spot}/>
     </div>
   )
 };

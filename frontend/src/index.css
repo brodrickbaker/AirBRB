@@ -85,6 +85,7 @@ img {
     display: flex;
     flex-direction: row;
     box-shadow: 0 0 5px #f9f6f6;
+    justify-content: space-around;
 
 }
 input, select, option {

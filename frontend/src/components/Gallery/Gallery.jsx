@@ -6,7 +6,7 @@ import './Gallery.css'
 
 const Gallery = () => {
   
-  const allSpots = useSelector(state => state.spot);
+  const allSpots = useSelector(state => state.spot.spots);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -22,13 +22,14 @@ const Gallery = () => {
             <NavLink to={`spots/${spot.id}`}>
               <img src={spot.previewImage}  
               alt={spot.name}
+              title={spot.name}
               className="card"
               />
             </NavLink>
             <div className='info'>
               <h3>{spot.city}, {spot.state}</h3>
               <h3> ⭐{spot.avgRating} </h3>
-              <h3><br/>${spot.price} night</h3>
+              <h3><br/>${spot.price}/night</h3>
             </div>
           </li>  
         )}

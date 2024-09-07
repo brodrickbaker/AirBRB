@@ -40,7 +40,7 @@ const craftedSpots = spots => {
             price: spot.price,
             createdAt: spot.createdAt,
             updatedAt: spot.updatedAt,
-            avgRating: avgRating(spot),
+            avgRating: Number(avgRating(spot).toFixed(2)),
             previewImage: preview(spot) 
         }
     })
@@ -129,7 +129,7 @@ router.get('/:id', async (req, res)=> {
     
     spot = spot.toJSON()
     spot.numReviews = spot.Reviews.length
-    spot.avgStarRating = avgRating(spot)
+    spot.avgStarRating = Number(avgRating(spot).toFixed(2))
     delete spot.Reviews
     return res.json(spot)
 })

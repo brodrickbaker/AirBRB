@@ -10,6 +10,6 @@
     color: black;
 }
 
-/* .nav > li {
-    display: block;
-} */
+.nav > li {
+    align-self: flex-end;
+}

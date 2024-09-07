@@ -26,7 +26,7 @@ const LoginFormModal = () => {
     return (
         <>
         <h1>Log In</h1>
-        <form className='card' onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}>
           <label>
             <input
               type="text"
