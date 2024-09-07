@@ -7,21 +7,21 @@
 .gallery  li {
     display: flex;
     flex-direction: column;
-    max-width: 400px;
+    min-width: 380px;
+    max-width: 440px;
     max-height: auto;
     box-sizing: border-box;
 }
 
 .gallery img {
-    width: 350px;
-    height: 350px;
+    width: 360px;
+    height: 360px;
     box-sizing: border-box;
 }
 
 .info {
     display: grid; 
     grid-template-columns: 2fr 1fr;
-    width: 100%;
 }
 
 .info h3 {

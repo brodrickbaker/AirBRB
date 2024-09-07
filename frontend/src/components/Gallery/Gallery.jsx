@@ -27,11 +27,11 @@ const Gallery = () => {
               className="card"
               />
             </NavLink>
-            <span className='info'>
+            <div className='info'>
               <h3>{spot.city}, {spot.state}</h3>
-              <h3> ⭐{spot.avgRating} </h3>
-              <h3><br/>${spot.price}/night</h3>
-            </span>
+              <h3> ⭐{spot.avgRating || 'New'} </h3>
+              <h3>${spot.price}/night</h3>
+            </div>
           </li>  
         )}
       )}</ul>

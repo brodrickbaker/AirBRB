@@ -14,13 +14,13 @@
 }
 
 .nav > li {
-    align-self: flex-end;
+    align-self: center;
     scale: 1.5;
 }
 
 .profile-dropdown {
     position: absolute;
-    top: 50px;
+    top: 40px;
     right: 30px;
     display: flex;
     width: 100px;
