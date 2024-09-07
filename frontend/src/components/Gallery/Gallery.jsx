@@ -14,9 +14,10 @@ const Gallery = () => {
   }, [dispatch])
   
     return (
-    <div >
-      <h1>Welcome!</h1>
-      <ul className='gallery card'>{Object.values(allSpots).map(spot => {
+    <>
+    <h1>Welcome!</h1>
+    <div className='gallery'>
+      <ul className='card'>{Object.values(allSpots).map(spot => {
         return (
           <li key={spot.id}>
             <NavLink to={`spots/${spot.id}`}>
@@ -26,15 +27,16 @@ const Gallery = () => {
               className="card"
               />
             </NavLink>
-            <div className='info'>
+            <span className='info'>
               <h3>{spot.city}, {spot.state}</h3>
               <h3> ⭐{spot.avgRating} </h3>
               <h3><br/>${spot.price}/night</h3>
-            </div>
+            </span>
           </li>  
         )}
       )}</ul>
     </div>
+      </>
   )
 };
 

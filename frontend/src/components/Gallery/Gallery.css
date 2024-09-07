@@ -1,20 +1,27 @@
-.gallery {
-    flex-wrap: wrap;
+.gallery ul {
+   display: flex; 
+   flex-wrap: wrap;
+   justify-content: space-between;
 }
 
-.gallery > li {
-    display: block;
+.gallery  li {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    max-height: auto;
+    box-sizing: border-box;
 }
 
 .gallery img {
-    width: 300px;
-    height: 300px;
+    width: 350px;
+    height: 350px;
+    box-sizing: border-box;
 }
 
 .info {
     display: grid; 
-    grid-template-columns: 4fr 1fr;
-    width: 290px;
+    grid-template-columns: 2fr 1fr;
+    width: 100%;
 }
 
 .info h3 {

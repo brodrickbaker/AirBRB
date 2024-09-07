@@ -36,7 +36,7 @@ function ProfileButton({ user }) {
         closeMenu();
     };
 
-    const ulClassName = 'profile-dropdown' + (showMenu ? '' : ' hidden')
+    const ulClassName =  showMenu ? 'profile-dropdown' : ' hidden'
     return (
     <>
       <button className='btn' onClick={toggleMenu}>

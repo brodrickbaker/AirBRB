@@ -20,9 +20,11 @@ const ShowSpot = () => {
       <h1>{spot.name}</h1>
       <h2>{spot.city}, {spot.state}, {spot.country}</h2>
       <img src={spot.SpotImages.find(image => image.preview).url}></img>
-      <h3>Hosted By {spot.Owner.firstName} {spot.Owner.lastName}</h3>
+      <div className="sub">
+        <h3>Hosted By {spot.Owner.firstName} {spot.Owner.lastName}</h3>
+        <CalloutBox spot={spot} />
+      </div>
       <p>{spot.description}</p>
-      <CalloutBox spot={spot} />
       <ShowReviews spot={spot}/>
     </div>
   )

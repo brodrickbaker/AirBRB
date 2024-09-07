@@ -10,20 +10,100 @@ module.exports = {
     ReviewImage.bulkCreate([
       {
         reviewId: 1,
-        url: 'https://www.bhg.com/thmb/3Vf9GXp3T-adDlU6tKpTbb-AEyE=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/white-modern-house-curved-patio-archway-c0a4a3b3-aa51b24d14d0464ea15d36e05aa85ac9.jpg'
+        url: 'https://i.ibb.co/TMcmbr1/pexels-photo-1571460.jpg'
       },
       {
         reviewId: 2,
-        url: 'www.fakepix.com',
+        url: 'https://i.ibb.co/TMcmbr1/pexels-photo-1571460.jpg',
       },
       {
         reviewId: 3,
-        url: 'www.fakepix.com',
+        url: 'https://i.ibb.co/LtrBhcL/1000-F-261892957-6jy-BXv-Eg-M79i-Yr1e-Ei-JKCosn-VPJdv-HHr.jpg',
       },
       {
         reviewId: 4,
-        url: 'www.fakepix.com',
-      }
+        url: 'https://i.ibb.co/LtrBhcL/1000-F-261892957-6jy-BXv-Eg-M79i-Yr1e-Ei-JKCosn-VPJdv-HHr.jpg',
+      },
+      {
+        reviewId: 5,
+        url: 'https://i.ibb.co/YZx25wP/Massey-H-G-Broadlands-329.jpg'
+      },
+      {
+        reviewId: 6,
+        url: 'https://i.ibb.co/YZx25wP/Massey-H-G-Broadlands-329.jpg',
+      },
+      {
+        reviewId: 7,
+        url: 'https://i.ibb.co/cgg46x2/PZ325-BUIKII6-TJEREXPWDR4-NYQ.jpg',
+      },
+      {
+        reviewId: 8,
+        url: 'https://i.ibb.co/cgg46x2/PZ325-BUIKII6-TJEREXPWDR4-NYQ.jpg',
+      },
+      {
+        reviewId: 1,
+        url: 'https://i.ibb.co/ZWkfcMx/Master-bedroom-inspiration-for-a-luxurious-interior-design.jpg'
+      },
+      {
+        reviewId: 2,
+        url: 'https://i.ibb.co/ZWkfcMx/Master-bedroom-inspiration-for-a-luxurious-interior-design.jpg',
+      },
+      {
+        reviewId: 3,
+        url: 'https://i.ibb.co/ZWkfcMx/Master-bedroom-inspiration-for-a-luxurious-interior-design.jpg',
+      },
+      {
+        reviewId: 4,
+        url: 'https://i.ibb.co/ZWkfcMx/Master-bedroom-inspiration-for-a-luxurious-interior-design.jpg',
+      },
+      {
+        reviewId: 5,
+        url: 'https://i.ibb.co/ZWkfcMx/Master-bedroom-inspiration-for-a-luxurious-interior-design.jpg'
+      },
+      {
+        reviewId: 6,
+        url: 'https://i.ibb.co/ZWkfcMx/Master-bedroom-inspiration-for-a-luxurious-interior-design.jpg',
+      },
+      {
+        reviewId: 7,
+        url: 'https://i.ibb.co/ZWkfcMx/Master-bedroom-inspiration-for-a-luxurious-interior-design.jpg',
+      },
+      {
+        reviewId: 8,
+        url: 'https://i.ibb.co/ZWkfcMx/Master-bedroom-inspiration-for-a-luxurious-interior-design.jpg',
+      },
+      {
+        reviewId: 5,
+        url: 'https://i.ibb.co/c1McS9S/fancy-bathroom-ideas-4325947-hero-4777bf14fe2b447b86a21e8a64194c29.jpg'
+      },
+      {
+        reviewId: 6,
+        url: 'https://i.ibb.co/ZWkfcMx/Master-bedroom-inspiration-for-a-luxurious-interior-design.jpg',
+      },
+      {
+        reviewId: 7,
+        url: 'https://i.ibb.co/c1McS9S/fancy-bathroom-ideas-4325947-hero-4777bf14fe2b447b86a21e8a64194c29.jpg',
+      },
+      {
+        reviewId: 8,
+        url: 'https://i.ibb.co/ZWkfcMx/Master-bedroom-inspiration-for-a-luxurious-interior-design.jpg',
+      },
+      {
+        reviewId: 1,
+        url: 'https://i.ibb.co/c1McS9S/fancy-bathroom-ideas-4325947-hero-4777bf14fe2b447b86a21e8a64194c29.jpg'
+      },
+      {
+        reviewId: 2,
+        url: 'https://i.ibb.co/ZWkfcMx/Master-bedroom-inspiration-for-a-luxurious-interior-design.jpg',
+      },
+      {
+        reviewId: 3,
+        url: 'https://i.ibb.co/c1McS9S/fancy-bathroom-ideas-4325947-hero-4777bf14fe2b447b86a21e8a64194c29.jpg',
+      },
+      {
+        reviewId: 4,
+        url: 'https://i.ibb.co/ZWkfcMx/Master-bedroom-inspiration-for-a-luxurious-interior-design.jpg',
+      },
     ], {validate: true})
   },
 

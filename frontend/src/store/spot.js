@@ -38,7 +38,6 @@ const fetchReviews = reviews => ({
     const res = await fetch(`/api/spots/${id}/reviews`);
     if (res.ok) {
         const reviews = await res.json()
-        console.log(reviews)
         dispatch(fetchReviews(reviews.Reviews))
     }
   }
