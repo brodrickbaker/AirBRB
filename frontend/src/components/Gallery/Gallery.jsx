@@ -9,6 +9,14 @@ const Gallery = () => {
   const allSpots = useSelector(state => state.spot.spots);
   const dispatch = useDispatch();
 
+  const newFirst = []
+
+  for (let i = Object.values(allSpots).length - 1; i >= 0; i--) {
+      newFirst.push(Object.values(allSpots)[i])
+  }
+
+  console.log(newFirst)
+
   useEffect(() => {
     dispatch(getSpots())
   }, [dispatch])
@@ -17,7 +25,7 @@ const Gallery = () => {
     <>
     <h1>Welcome!</h1>
     <div className='gallery'>
-      <ul className='card'>{Object.values(allSpots).map(spot => {
+      <ul className='card'>{newFirst.map(spot => {
         return (
           <li key={spot.id}>
             <NavLink to={`spots/${spot.id}`}>

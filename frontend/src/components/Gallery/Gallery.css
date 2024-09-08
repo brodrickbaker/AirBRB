@@ -34,3 +34,7 @@
     justify-self: end;
     padding-right: 10px;
 }
+
+.gallery {
+    flex-direction: row;
+}

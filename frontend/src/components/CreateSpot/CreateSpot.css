@@ -1,0 +1,15 @@
+#spot-form, .form-card {
+    flex-direction: column;
+}
+
+#spot-form > form {
+    align-self: center;
+    margin: 50px 100px;
+    padding:  20px 50px;
+    width: 600px;
+}
+
+#spot-form  > form > * {
+    width: 500px;
+    margin: 10px 50px;
+}

@@ -2,6 +2,10 @@
     display: none;
 }
 
+.invisible {
+    visibility: hidden;
+}
+
 .modal-item:hover {
     cursor: pointer;
     background-color: #262020;
@@ -35,4 +39,8 @@
 .user {
     width: fit-content;
     padding: 5px;
+}
+
+.end-align {
+    justify-self: end;
 }

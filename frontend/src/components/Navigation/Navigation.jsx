@@ -2,10 +2,13 @@ import { FaAirbnb } from "react-icons/fa";
 import { NavLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ProfileButton from './ProfileButton';
+
+
 import './Navigation.css';
 
 function Navigation({ isLoaded }){
   const sessionUser = useSelector(state => state.session.user);
+  const loggedIn = sessionUser? 'end-align modal-item' : 'invisible'
 
   return (
     <>
@@ -13,7 +16,10 @@ function Navigation({ isLoaded }){
             <li>
                 <NavLink to="/"><h3><FaAirbnb/>airBRB</h3></NavLink>
             </li>
-            {isLoaded && (<li>
+            <li className={loggedIn}>
+                <NavLink to="/spots/new">Create a New Spot</NavLink>
+            </li>
+            {isLoaded && (<li className="end-align">
                 <ProfileButton user={sessionUser} />
             </li>)}
         </ul>

@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { getOneSpot } from "../../store/spot";
 import './ShowSpot.css'
 import CalloutBox from "../CalloutBox";
-import ShowReviews from "../ShowReviews";
+import ShowReviews from "./ShowReviews";
 import SpotImages from "../SpotImages";
 
 const ShowSpot = () => {

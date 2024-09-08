@@ -2,7 +2,6 @@ import { getReviews } from "../../store/spot";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
-import './ShowReview.css'
 import { sOrNah } from "../../store/spot";
 
 const months = { 
@@ -50,7 +49,7 @@ if(reviews.length){
 } else if(!reviews.length && user && user.id !== spot.ownerId)  {
     return (
     <>
-        <h2>⭐ 0.00</h2>
+        <h2>⭐ 0.0</h2>
         <div className="card">
             <h3>Be the first tor write a review</h3>
         </div>
@@ -58,7 +57,7 @@ if(reviews.length){
 )} else {
     return (
         <>
-            <h2>⭐ 0.00</h2>
+            <h2>⭐ 0.0</h2>
             <div className="card">
                 <h3>No Reviews Yet</h3>
             </div>
