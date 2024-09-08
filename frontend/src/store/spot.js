@@ -1,7 +1,8 @@
-
 const LOAD_SPOTS = 'spots/LOAD_SPOTS';
 const GET_SPOT = 'spots/GET_SPOT'
 const GET_REVIEWS = 'spots/GET_REVIEWS'
+
+export const sOrNah = reviews => reviews.length !== 1 || reviews !== 1 ? 'Reviews' : 'Review';
 
 const loadSpots = spots => ({
     type: LOAD_SPOTS,

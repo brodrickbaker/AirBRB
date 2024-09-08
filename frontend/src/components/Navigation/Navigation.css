@@ -15,7 +15,7 @@
 
 .nav > li {
     align-self: center;
-    scale: 1.5;
+    scale: 1.25;
 }
 
 .profile-dropdown {
@@ -30,4 +30,9 @@
     margin-right: 10px;
     border-radius: 5px;
     padding: 0;
+}
+
+.user {
+    width: fit-content;
+    padding: 5px;
 }

@@ -37,12 +37,14 @@ function ProfileButton({ user }) {
     };
 
     const ulClassName =  showMenu ? 'profile-dropdown' : ' hidden'
+    const loggedIn = user ? 'user' : ''
+
     return (
     <>
       <button className='btn' onClick={toggleMenu}>
         <CgMenu /><CgProfile />
       </button>
-      <ul className={ulClassName} ref={ulRef}>
+      <ul className={`${ulClassName} ${loggedIn}`} ref={ulRef}>
         {user ? (
           <>
             <li>{user.username}</li>

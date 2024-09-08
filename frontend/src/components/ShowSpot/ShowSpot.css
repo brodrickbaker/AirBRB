@@ -1,3 +1,79 @@
-.sub {
+.spot {
+    max-width: 1000px;
+    min-width: 540px;
+    box-sizing: border-box;
+    align-self: center;
+    padding-left: 10px;
+    margin: auto;
     display: flex;
+    flex-direction: column;
+}
+
+.sub {
+    display: grid;
+    grid-template-areas:
+    "name . box"
+    "desc desc box";
+}
+
+.sub h3 {
+    grid-area: name;
+}
+
+.description {
+    grid-area: desc;
+}
+
+#callout-box {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    grid-area: box;
+    width: 250px;
+    justify-self: end;
+}
+#callout-box .btn {
+    width: 80%;
+    font-size: 20px;
+    color: #ecdfdf;
+    height: 40px;
+}
+
+.images > .card {
+    display: flex;  
+    flex-direction: row;
+    flex-wrap: none;   
+}
+
+.images  ul {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
+    padding-left: 2px;
+}
+
+.images li {
+    max-width: 250px;
+    max-height: 250px;
+    flex: 1;
+}
+
+li > .card {
+    width: 225px;
+    height: 225px;
+    box-sizing: border-box;
+    margin: 2px;
+}
+.description { 
+    display: flex;
+}
+
+.main {
+    max-width: 450px;
+    max-height: 450px;
+    padding: 10px;
+}
+
+#review {
+    display: block;
 }

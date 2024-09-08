@@ -40,7 +40,7 @@ const craftedSpots = spots => {
             price: spot.price,
             createdAt: spot.createdAt,
             updatedAt: spot.updatedAt,
-            avgRating: Number(avgRating(spot).toFixed(2)),
+            avgRating: avgRating(spot).toFixed(1),
             previewImage: preview(spot) 
         }
     })
@@ -129,7 +129,7 @@ router.get('/:id', async (req, res)=> {
     
     spot = spot.toJSON()
     spot.numReviews = spot.Reviews.length
-    spot.avgStarRating = Number(avgRating(spot).toFixed(2))
+    spot.avgStarRating = avgRating(spot).toFixed(1)
     delete spot.Reviews
     return res.json(spot)
 })
@@ -236,6 +236,7 @@ router.get('/:id/reviews', async (req, res) => {
         where: {
             spotId: spot.id
         },
+        order: [['createdAt', 'DESC']],
         include: [
             { 
                 model: User,

@@ -5,6 +5,7 @@ import { getOneSpot } from "../../store/spot";
 import './ShowSpot.css'
 import CalloutBox from "../CalloutBox";
 import ShowReviews from "../ShowReviews";
+import SpotImages from "../SpotImages";
 
 const ShowSpot = () => {
   const {spotId} = useParams();
@@ -16,15 +17,17 @@ const ShowSpot = () => {
   }, [dispatch, spotId])
 
     return (
-    <div>
+    <div className="spot">
       <h1>{spot.name}</h1>
       <h2>{spot.city}, {spot.state}, {spot.country}</h2>
-      <img src={spot.SpotImages.find(image => image.preview).url}></img>
+      <div className="images">
+        <SpotImages spot={spot} />
+      </div>
       <div className="sub">
         <h3>Hosted By {spot.Owner.firstName} {spot.Owner.lastName}</h3>
+        <p className="description">{spot.description}</p>
         <CalloutBox spot={spot} />
       </div>
-      <p>{spot.description}</p>
       <ShowReviews spot={spot}/>
     </div>
   )
