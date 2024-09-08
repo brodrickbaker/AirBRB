@@ -26,9 +26,7 @@ const ShowReviews = (props) => {
     const dispatch = useDispatch();
     const reviews = useSelector(state => state.spot.reviews);
     const user = useSelector(state => state.session.user);
-    console.log({userID: user.id,
-        ownerID: spot.ownerId
-    })
+
     useEffect(() => {
       dispatch(getReviews(spotId))
     }, [dispatch, spotId])
@@ -49,7 +47,7 @@ if(reviews.length){
         </ul>
     </div>
   )
-} else if(!reviews.length && user && user.id !== spot.ownerId) {
+} else if(!reviews.length && user && user.id !== spot.ownerId)  {
     return (
     <>
         <h2>⭐ 0.00</h2>
