@@ -1,12 +1,13 @@
 .spot {
     max-width: 1000px;
-    min-width: 840px;
+    min-width: 500px;
     box-sizing: border-box;
     align-self: center;
     padding-left: 10px;
     margin: auto;
     display: flex;
     flex-direction: column;
+    align-content: stretch;
 }
 
 .sub {

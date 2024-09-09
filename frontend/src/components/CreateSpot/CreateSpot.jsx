@@ -19,7 +19,11 @@ const CreateSpot = () => {
     const [name, setTitle] = useState('');
     const [price, setPrice] = useState('');
     const [preview, setPreview] = useState('');
-    const [url, setUrl] = useState('');
+    const [url1, setUrl1] = useState('');
+    const [url2, setUrl2] = useState('');
+    const [url3, setUrl3] = useState('');
+    const [url4, setUrl4] = useState('');
+    
     // const [errors, setErrors] = useState({});
 
     const updateCountry= (e) => setCountry(e.target.value);
@@ -32,7 +36,10 @@ const CreateSpot = () => {
     const updateTitle = (e) => setTitle(e.target.value);
     const updatePrice = (e) => setPrice((e.target.value));
     const updatePreview = (e) => setPreview((e.target.value));
-    const updateUrl = (e) => setUrl((e.target.value));
+    const updateUrl1 = (e) => setUrl1((e.target.value));
+    const updateUrl2 = (e) => setUrl2((e.target.value));
+    const updateUrl3 = (e) => setUrl3((e.target.value));
+    const updateUrl4 = (e) => setUrl4((e.target.value));
 
     const reset = () => {
       setCountry('');
@@ -46,8 +53,6 @@ const CreateSpot = () => {
       setPrice('');
     };
   
-    let createdSpot
-
       const handleSubmit = async (e) => {
         e.preventDefault();
     
@@ -63,9 +68,12 @@ const CreateSpot = () => {
           price: parseInt(price)
         };
     
-        createdSpot = await dispatch(createSpot(payload))
+        const createdSpot = await dispatch(createSpot(payload))
 
         if (createdSpot) {
+          
+          
+          
           reset();
           navigate(`/`);
         }
@@ -181,8 +189,26 @@ const CreateSpot = () => {
               <input
               type="text"
               placeholder="Image URL"
-              value={url}
-              onChange={updateUrl} />
+              value={url1}
+              onChange={updateUrl1} />
+              <label>Image URL must in in .png, .jpg, or .jpeg</label>
+              <input
+              type="text"
+              placeholder="Image URL"
+              value={url2}
+              onChange={updateUrl2} />
+              <label>Image URL must in in .png, .jpg, or .jpeg</label>
+              <input
+              type="text"
+              placeholder="Image URL"
+              value={url3}
+              onChange={updateUrl3} />
+              <label>Image URL must in in .png, .jpg, or .jpeg</label>
+              <input
+              type="text"
+              placeholder="Image URL"
+              value={url4}
+              onChange={updateUrl4} />
               <label>Image URL must in in .png, .jpg, or .jpeg</label>
             </div>
             <button type="submit" className='btn'>Create Spot</button>

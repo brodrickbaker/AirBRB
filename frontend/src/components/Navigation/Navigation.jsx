@@ -14,7 +14,7 @@ function Navigation({ isLoaded }){
     <>
         <ul className="nav">
             <li>
-                <NavLink to="/"><h3><FaAirbnb/>airBRB</h3></NavLink>
+                <NavLink to="/"><h3><FaAirbnb/><span className="expendable">airBRB</span></h3></NavLink>
             </li>
             <li className={loggedIn}>
                 <NavLink to="/spots/new">Create a New Spot</NavLink>
