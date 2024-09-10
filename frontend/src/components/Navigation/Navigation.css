@@ -6,7 +6,7 @@
     visibility: hidden;
 }
 
-.modal-item:hover {
+.nav .modal-item:hover {
     cursor: pointer;
     background-color: #262020;
 }

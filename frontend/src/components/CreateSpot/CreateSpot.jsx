@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { createSpot, addPic } from '../../store/spot';
 import './CreateSpot.css'
@@ -7,7 +7,7 @@ import './CreateSpot.css'
 const CreateSpot = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
+    const spot = useSelector(state => state.spot.spot)
     const [country, setCountry] = useState('');
     const [address, setAddress] = useState('');
     const [city, setCity] = useState('');
@@ -73,20 +73,19 @@ const CreateSpot = () => {
         };
   
         const createdSpot = await dispatch(createSpot(payload))
-        console.log(createdSpot.body)
         setErrors(createdSpot.errors)
   
         if (!errors) {
           
-          // const previewImage = {
-          //   spotId: createdSpot.id,
-          //   url: preview,
-          //   preview: true
-          // }
+          const previewImage = {
+            spotId: spot.id,
+            url: preview,
+            preview: true
+          }
 
-          // const newPic = await dispatch(addPic(createdSpot, previewImage))
-          // setErrors(newPic.errors)
-          // console.log(newPic, errors)
+          const newPic = await dispatch(addPic(spot, previewImage))
+          setErrors(newPic)
+          console.log(newPic, errors, spot)
           // setTimeout(() => {
           //   if (!errors) {
           //     reset();

@@ -4,6 +4,8 @@ const LOAD_SPOTS = 'spots/LOAD_SPOTS';
 const GET_SPOT = 'spots/GET_SPOT'
 const GET_REVIEWS = 'spots/GET_REVIEWS'
 const POST_SPOT = 'spots/POST_SPOT'
+const POST_PIC = 'spots/POST_PIC'
+const POST_REVIEW = 'spots/POST_REVIEW'
 
 export const sOrNah = reviews => reviews !== 1 ? 'Reviews' : 'Review';
 
@@ -25,6 +27,16 @@ const fetchReviews = reviews => ({
 const postSpot = spot => ({
   type: POST_SPOT,
   spot
+})
+
+const postPic = pic => ({
+  type: POST_PIC,
+  pic
+})
+
+const postReview = review => ({
+  type: POST_REVIEW,
+  review
 })
 
   export const getSpots = () => async dispatch => {
@@ -64,21 +76,38 @@ const postSpot = spot => ({
       return res;
   }
 
-  export const addPic = async(spot, pic) => {
+  export const addPic = (spot, pic) => async dispatch => {
     const res = await csrfFetch(`/api/spots/${spot.id}/images`,
       {
         method: 'POST',
         body: JSON.stringify(pic)
       }).catch(async res => await res.json())
-
+      if (res.ok) {
+        const newPic = await res.json();
+        dispatch(postPic(newPic));
+      }
       return res; 
   }
+
+  export const addReview = (review) => async dispatch => {
+    const res = await csrfFetch(`/api/spots/${review.spotId}/reviews`,
+      {
+        method: 'POST',
+        body: JSON.stringify(review)
+      })
+      console.log(res)
+      const newReview = await res.json();
+      dispatch(postReview(newReview));
+      return res; 
+  }
+
 
 
 const initialState = {
     spots: {},
     spot: null,
-    reviews: []
+    reviews: [],
+    images: []
 } 
 
 const spotReducer = (state = initialState, action) => {
@@ -107,6 +136,16 @@ const spotReducer = (state = initialState, action) => {
           const newState = {...state}
           newState.spots[action.spot.id] = action.spot
           newState.spot = action.spot
+          return newState
+        }
+        case POST_PIC: {
+          const newState = {...state}
+          newState.images = [...newState.images, action.pic]
+          return newState
+        }
+        case POST_REVIEW: {
+          const newState = {...state}
+          newState.reviews = [...newState.reviews, action.review]
           return newState
         }
           default:

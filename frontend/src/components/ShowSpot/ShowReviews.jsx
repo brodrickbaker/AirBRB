@@ -41,7 +41,7 @@ if(reviews.length){
             <button className="btn">
                 <OpenModalButton
                 buttonText="Write a Review"
-                modalComponent={<CreateReviewModal />}
+                modalComponent={<CreateReviewModal spot={spot}/>}
               /></button>}</h2>
          <ul className="card" id="review">{reviews.map(review => {       
             const createdAt = months[review.createdAt.slice(5,7)] + ' ' + review.createdAt.slice(0,4);    
@@ -63,7 +63,7 @@ if(reviews.length){
             <button className="btn">
                 <OpenModalButton
                 buttonText="Write a Review"
-                modalComponent={<CreateReviewModal />}
+                modalComponent={<CreateReviewModal spot={spot} />}
               /></button>}</h2>
         <div className="card">
             <h3>Be the first tor write a review</h3>

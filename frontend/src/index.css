@@ -27,7 +27,6 @@ h2, h5 {
     font-family: "SUSE", sans-serif;
     font-optical-sizing: auto;
     color: #7ba7e5;
-    text-shadow: 1px 1px 2px goldenrod;
 }
 a {
     text-decoration: none;
@@ -102,7 +101,7 @@ img {
 
 input, select, textarea {
     color: #332B2B;
-    background-color: #faeded;
+    background-color: #fbe9df;
 }
 
 .alert {
@@ -125,7 +124,7 @@ form > div {
     padding: 5px 10px;
 }
 
-ul {
+ul, li {
     list-style: none;
 }
 
