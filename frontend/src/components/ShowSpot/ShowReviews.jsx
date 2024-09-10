@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { sOrNah } from "../../store/spot";
+import OpenModalButton from "../OpenModalButton";
+import CreateReviewModal from "../CreateReviewModal";
 
 const months = { 
     '01': 'January',
@@ -34,7 +36,13 @@ const ShowReviews = (props) => {
 if(reviews.length){
   return (
     <div>
-        <h2>{' ⭐ ' + spot.avgStarRating  + '  •  ' + spot.numReviews + ' ' + sOrNah(reviews.length)} {!reviewed && <button className="btn">Write a review</button>}</h2>
+        <h2>{' ⭐ ' + spot.avgStarRating  + '  •  ' + spot.numReviews + ' ' + sOrNah(reviews.length)}&nbsp;&nbsp;
+            {!reviewed && 
+            <button className="btn">
+                <OpenModalButton
+                buttonText="Write a Review"
+                modalComponent={<CreateReviewModal />}
+              /></button>}</h2>
          <ul className="card" id="review">{reviews.map(review => {       
             const createdAt = months[review.createdAt.slice(5,7)] + ' ' + review.createdAt.slice(0,4);    
             return (
@@ -51,7 +59,12 @@ if(reviews.length){
 } else if(!reviews.length && user && user.id !== spot.ownerId)  {
     return (
     <>
-        <h2>⭐ 0.0 {!reviewed && <button className="btn">Write a review</button>}</h2>
+        <h2>⭐ 0.0&nbsp;&nbsp;{!reviewed && 
+            <button className="btn">
+                <OpenModalButton
+                buttonText="Write a Review"
+                modalComponent={<CreateReviewModal />}
+              /></button>}</h2>
         <div className="card">
             <h3>Be the first tor write a review</h3>
         </div>
