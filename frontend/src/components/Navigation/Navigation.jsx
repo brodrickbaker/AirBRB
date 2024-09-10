@@ -1,4 +1,4 @@
-import { FaAirbnb } from "react-icons/fa";
+import { SiAirbnb } from "react-icons/si";
 import { NavLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ProfileButton from './ProfileButton';
@@ -14,7 +14,7 @@ function Navigation({ isLoaded }){
     <>
         <ul className="nav">
             <li>
-                <NavLink to="/"><h3><FaAirbnb/><span className="expendable">airBRB</span></h3></NavLink>
+                <NavLink to="/"><h3><SiAirbnb/><span className="expendable">airBRB</span></h3></NavLink>
             </li>
             <li className={loggedIn}>
                 <NavLink to="/spots/new">Create a New Spot</NavLink>

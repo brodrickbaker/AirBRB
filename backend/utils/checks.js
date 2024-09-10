@@ -21,12 +21,14 @@ const validateSpot = [
       .exists({checkFalsy: true})
       .withMessage('Country is required'),
     check('lat')
+      .optional({values: 'falsy'})
       .isFloat({
         min: -90,
         max: 90
       })
       .withMessage('Latitude must be within -90 and 90'),
     check('lng')
+      .optional({values: 'falsy'})
       .isFloat({
         min: -180,
         max: 180

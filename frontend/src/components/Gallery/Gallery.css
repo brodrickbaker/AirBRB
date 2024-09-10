@@ -7,15 +7,15 @@
 .gallery  li {
     display: flex;
     flex-direction: column;
-    min-width: 380px;
-    max-width: 440px;
+    min-width: 200px;
+    max-width: 400px;
     max-height: auto;
     box-sizing: border-box;
 }
 
 .gallery img {
-    width: 360px;
-    height: 360px;
+    width: 350px;
+    height: 350px;
     box-sizing: border-box;
 }
 

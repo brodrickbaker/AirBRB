@@ -15,8 +15,6 @@ const Gallery = () => {
       newFirst.push(Object.values(allSpots)[i])
   }
 
-  console.log(newFirst)
-
   useEffect(() => {
     dispatch(getSpots())
   }, [dispatch])

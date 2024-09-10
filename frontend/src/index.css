@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Georama:ital,wght@0,100..900;1,100..900&family=Tajawal:wght@200;300;400;500;700;800;900&display=swap&family=SUSE:wght@100..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap&family=Tajawal:wght@200;300;400;500;700;800;900&display=swap&family=SUSE:wght@100..800&display=swap');
 
 * {
     font-family: "Tajawal", sans-serif;
@@ -9,7 +9,6 @@
     display: flex;
     flex-direction: column;
     align-self: center;
-    max-width: 1000px;
 }
 body {
     background-color: #262020;
@@ -18,14 +17,17 @@ body {
     justify-content: center;
 }
 h1, h4 {
-    font-family: "SUSE", sans-serif;
+    font-family: "Raleway", sans-serif;
     font-optical-sizing: auto;
-    color: #458aeb;    
+    color: #458aeb;
+        
 }
 
 h2, h5 {
-    font-family: "Georama", sans-serif;
-    color: #2a6cc8;
+    font-family: "SUSE", sans-serif;
+    font-optical-sizing: auto;
+    color: #7ba7e5;
+    text-shadow: 1px 1px 2px goldenrod;
 }
 a {
     text-decoration: none;
@@ -34,13 +36,12 @@ a {
 
 .btn {
     background: linear-gradient(190deg, #e86b6b, #e13c3c ,#DB0000);
-    border: 1px solid rgb(0, 0, 0);
-    border-radius: 25px;
+    border: none;
+    border-radius: 15px;
     padding: 5px 10px 5px 10px;
     margin: 5px 2px;
     font-weight: 600;
     color: #faeded;
-    display: flex;
     width: fit-content;
     justify-content: center;
 }
@@ -50,7 +51,6 @@ a {
 }
 
 .btn:active {
-    border: 1px solid white;
     background-color: #DB0000;
 }
 
@@ -100,7 +100,7 @@ img {
     justify-content: space-around;
 }
 
-input, select, option {
+input, select, textarea {
     color: #332B2B;
     background-color: #faeded;
 }

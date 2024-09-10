@@ -4,9 +4,8 @@ const LOAD_SPOTS = 'spots/LOAD_SPOTS';
 const GET_SPOT = 'spots/GET_SPOT'
 const GET_REVIEWS = 'spots/GET_REVIEWS'
 const POST_SPOT = 'spots/POST_SPOT'
-// const POST_PIC = 'spots/POST_PICS'
 
-export const sOrNah = reviews => reviews.length !== 1 || reviews !== 1 ? 'Reviews' : 'Review';
+export const sOrNah = reviews => reviews !== 1 ? 'Reviews' : 'Review';
 
 const loadSpots = spots => ({
     type: LOAD_SPOTS,
@@ -27,7 +26,6 @@ const postSpot = spot => ({
   type: POST_SPOT,
   spot
 })
-
 
   export const getSpots = () => async dispatch => {
     const res = await fetch(`/api/spots`);
@@ -58,13 +56,24 @@ const postSpot = spot => ({
       {
         method: 'POST',
         body: JSON.stringify(spot)
-      })
-
-      const newSpot = await res.json();
-      dispatch(postSpot(newSpot));
-      return res; 
-
+      }).catch(async res => await res.json())
+      if (res.ok) {
+        const newSpot = await res.json();
+        dispatch(postSpot(newSpot));
+      }
+      return res;
   }
+
+  export const addPic = async(spot, pic) => {
+    const res = await csrfFetch(`/api/spots/${spot.id}/images`,
+      {
+        method: 'POST',
+        body: JSON.stringify(pic)
+      }).catch(async res => await res.json())
+
+      return res; 
+  }
+
 
 const initialState = {
     spots: {},

@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { createSpot } from '../../store/spot';
+import { createSpot, addPic } from '../../store/spot';
 import './CreateSpot.css'
 
 const CreateSpot = () => {
-    // const user = useSelector(state => state.session.user)
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -22,9 +21,8 @@ const CreateSpot = () => {
     const [url1, setUrl1] = useState('');
     const [url2, setUrl2] = useState('');
     const [url3, setUrl3] = useState('');
-    const [url4, setUrl4] = useState('');
-    
-    // const [errors, setErrors] = useState({});
+    const [url4, setUrl4] = useState(''); 
+    const [errors, setErrors] = useState({});
 
     const updateCountry= (e) => setCountry(e.target.value);
     const updateAddress = (e) => setAddress(e.target.value);
@@ -51,11 +49,17 @@ const CreateSpot = () => {
       setTitle('');
       setDescription('');
       setPrice('');
+      setPreview('');
+      setUrl1('');
+      setUrl2('');
+      setUrl3('');
+      setUrl4('');
     };
   
       const handleSubmit = async (e) => {
         e.preventDefault();
-    
+        setErrors({})
+
         const payload = {
           country,
           address,
@@ -67,58 +71,69 @@ const CreateSpot = () => {
           name,
           price: parseInt(price)
         };
-    
+  
         const createdSpot = await dispatch(createSpot(payload))
+        console.log(createdSpot.body)
+        setErrors(createdSpot.errors)
+  
+        if (!errors) {
+          
+          // const previewImage = {
+          //   spotId: createdSpot.id,
+          //   url: preview,
+          //   preview: true
+          // }
 
-        if (createdSpot) {
+          // const newPic = await dispatch(addPic(createdSpot, previewImage))
+          // setErrors(newPic.errors)
+          // console.log(newPic, errors)
+          // setTimeout(() => {
+          //   if (!errors) {
+          //     reset();
+          //     navigate(`/`);
+          //   }
+          // }, 1000)
           
-          
-          
-          reset();
-          navigate(`/`);
         }
       };
 
       return (
         <section className="card" id='spot-form'>
+          <form  onSubmit={handleSubmit}>
           <h1>Create a new Spot</h1>
+          <div className='card form-card'>
           <h2>Where&apos;s your place located?</h2>
           <h3>Guests will only get your exact address once they book a reservation.</h3>
-          <form  onSubmit={handleSubmit}>
             <label>
-              Country <span className='error'>*ERROR</span>
+              Country {errors && <span> {errors.country}</span>}
             </label>
             <input
               type="text"
               placeholder="Country"
-              required
               value={country}
               onChange={updateCountry} />
             <label>
-              Street Address
+              Street Address {errors && <span> {errors.address}</span>}
             </label>
             <input
               type="text"
               placeholder="Street Address"
-              required
               value={address}
               onChange={updateAddress} />
             <label>
-              City
+              City {errors && <span> {errors.city}</span>}
             </label>
             <input
               type="text"
               placeholder="City"
-              required
               value={city}
               onChange={updateCity} />
             <label>
-              State
+              State {errors && <span> {errors.state}</span>}
             </label>
             <input
               type="text"
               placeholder="STATE"
-              required
               value={state}
               onChange={updateState} />
             <label>
@@ -137,19 +152,18 @@ const CreateSpot = () => {
               placeholder="Longitude"
               value={lng}
               onChange={updateLongitude} />
+            </div>
             <div className='card form-card'>
             <h2>Describe your place to guests</h2>
             <h3>Mention the best features of your space, any special amenities like fast wifi or parking, and what you love about the neighborhood.</h3>
             <textarea
-              className='card'
               placeholder="Description"
-              required
               value={description}
               rows='10'
               onChange={updateDescription} >
             </textarea>
             <label>
-              Description error
+              {errors && <span> {errors.description}</span>}
             </label>
             </div>
             <div className='card form-card'>
@@ -161,7 +175,7 @@ const CreateSpot = () => {
               value={name}
               onChange={updateTitle} />
               <label>
-              Name error
+              {errors && <span> {errors.name}</span>}
               </label>
             </div>
             <div className='card form-card'>
@@ -173,7 +187,7 @@ const CreateSpot = () => {
               value={price}
               onChange={updatePrice} />
               <label>
-              Price error
+              {errors && <span> {errors.price}</span>}
               </label>
             </div>
             <div className="card form-card">
@@ -182,16 +196,15 @@ const CreateSpot = () => {
             <input
               type="text"
               placeholder="Preview Image URL"
-              required
               value={preview}
               onChange={updatePreview} />
-              <label>Preview Image Required</label>
+              <label></label>
               <input
               type="text"
               placeholder="Image URL"
               value={url1}
               onChange={updateUrl1} />
-              <label>Image URL must in in .png, .jpg, or .jpeg</label>
+              <label>Image URL must end in .png, .jpg, or .jpeg</label>
               <input
               type="text"
               placeholder="Image URL"

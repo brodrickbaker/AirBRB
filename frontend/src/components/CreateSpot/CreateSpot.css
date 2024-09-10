@@ -5,6 +5,7 @@
 
 #spot-form, .form-card {
     flex-direction: column;
+    background-color: rgb(37, 37, 39);
 }
 
 #spot-form > form {
@@ -17,4 +18,8 @@
 #spot-form  > form > * {
     width: 500px;
     margin: 10px 50px;
+}
+#spot-form span {
+    color: red;
+    line-height: 80%;
 }

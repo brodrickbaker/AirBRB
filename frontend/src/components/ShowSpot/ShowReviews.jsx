@@ -26,13 +26,15 @@ const ShowReviews = (props) => {
     const reviews = useSelector(state => state.spot.reviews);
     const user = useSelector(state => state.session.user);
 
+    const reviewed = reviews.find(review => user.id == review.userId)
+
     useEffect(() => {
       dispatch(getReviews(spotId))
     }, [dispatch, spotId])
 if(reviews.length){
   return (
     <div>
-        <h2>{' ⭐ ' + spot.avgStarRating  + '  •  ' + spot.numReviews + ' ' + sOrNah(reviews)}</h2>
+        <h2>{' ⭐ ' + spot.avgStarRating  + '  •  ' + spot.numReviews + ' ' + sOrNah(reviews.length)} {!reviewed && <button className="btn">Write a review</button>}</h2>
          <ul className="card" id="review">{reviews.map(review => {       
             const createdAt = months[review.createdAt.slice(5,7)] + ' ' + review.createdAt.slice(0,4);    
             return (
@@ -49,7 +51,7 @@ if(reviews.length){
 } else if(!reviews.length && user && user.id !== spot.ownerId)  {
     return (
     <>
-        <h2>⭐ 0.0</h2>
+        <h2>⭐ 0.0 {!reviewed && <button className="btn">Write a review</button>}</h2>
         <div className="card">
             <h3>Be the first tor write a review</h3>
         </div>
