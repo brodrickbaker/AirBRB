@@ -25,12 +25,12 @@ const CreateReviewModal = (props) => {
             stars
         }
         return dispatch(addReview(payload))
-        .then(closeModal)
-        // .catch(async res => {
-        //     const data = await res.json();
-        //     if (data?.errors) setErrors(data.errors);
-        //   }
-        // );
+        .then(closeModal())
+        .catch(async res => {
+            const data = await res.json();
+            if (data?.errors) setErrors(data.errors);
+          }
+        );
         
     };
     

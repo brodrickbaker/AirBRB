@@ -1,7 +1,7 @@
 import { getReviews } from "../../store/spot";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { sOrNah } from "../../store/spot";
 import OpenModalButton from "../OpenModalButton";
 import CreateReviewModal from "../CreateReviewModal";
@@ -27,14 +27,15 @@ const ShowReviews = (props) => {
     const dispatch = useDispatch();
     const reviews = useSelector(state => state.spot.reviews);
     const user = useSelector(state => state.session.user);
-
-    const reviewed = reviews.find(review => user.id == review.userId)
+    const [reviewed, setReviewed] = useState(false)
+    
 
     useEffect(() => {
       dispatch(getReviews(spotId))
-    }, [dispatch, spotId])
+      setReviewed(reviews.find(review => user.id == review.userId))
+    }, [])
 if(reviews.length){
-  return (
+  return (   
     <div>
         <h2>{' ⭐ ' + spot.avgStarRating  + '  •  ' + spot.numReviews + ' ' + sOrNah(reviews.length)}&nbsp;&nbsp;
             {!reviewed && 

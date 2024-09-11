@@ -95,7 +95,6 @@ const postReview = review => ({
         method: 'POST',
         body: JSON.stringify(review)
       })
-      console.log(res)
       const newReview = await res.json();
       dispatch(postReview(newReview));
       return res; 

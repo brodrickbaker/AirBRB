@@ -3,9 +3,10 @@ import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import * as sessionActions from './store/session';
 import Navigation from './components/Navigation';
-import Gallery from './components/Gallery';
+import LandingPage from './components/LandingPage';
 import ShowSpot from './components/ShowSpot';
 import CreateSpot from './components/CreateSpot';
+import UserSpots from './components/UserSpots';
 
 function Layout() {
   const dispatch = useDispatch();
@@ -32,7 +33,7 @@ const router = createBrowserRouter([
     [
       {
         path: '/',
-        element: <Gallery />
+        element: <LandingPage />
       },
       {
         path: '/spots/:spotId',
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
       {
         path: '/spots/new',
         element: <CreateSpot />
+      },
+      {
+        path: '/spots/current',
+        element: <UserSpots />
       }
     ]
   }

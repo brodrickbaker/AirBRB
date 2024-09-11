@@ -17,6 +17,8 @@ const ShowSpot = () => {
   }, [dispatch, spotId])
 
     return (
+      <>
+      {spot &&
     <div className="spot">
       <h1>{spot.name}</h1>
       <h2>{spot.city}, {spot.state}, {spot.country}</h2>
@@ -29,7 +31,8 @@ const ShowSpot = () => {
         <CalloutBox spot={spot} />
       </div>
       <ShowReviews spot={spot}/>
-    </div>
+    </div>}
+    </>
   )
 };
 
