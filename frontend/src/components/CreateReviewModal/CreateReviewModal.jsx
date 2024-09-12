@@ -1,16 +1,15 @@
-import { useState, useEffect } from 'react';
-import { addReview, getReviews } from '../../store/spot';
-import { useDispatch, useSelector } from 'react-redux';
+import { useState,  } from 'react';
+import { addReview,  } from '../../store/spot';
+import { useDispatch } from 'react-redux';
 import { useModal } from '../../context/Modal';
 
 const CreateReviewModal = (props) => {
-    const {spot} = props
+    const {spot, user} = props
     const [review, setReview] = useState("");
     const [stars, setStars] = useState(5)
-    const [errors, setErrors] = useState({});
+    // const [errors, setErrors] = useState({});
     const { closeModal } = useModal();
     const dispatch = useDispatch()
-    const user = useSelector(state => state.session.user);
 
     // useEffect(() => {
     //     dispatch(getReviews(spot.id))
@@ -26,14 +25,13 @@ const CreateReviewModal = (props) => {
         }
         return dispatch(addReview(payload))
         .then(closeModal())
-        .catch(async res => {
-            const data = await res.json();
-            if (data?.errors) setErrors(data.errors);
-          }
-        );
+        // .catch(async res => {
+        // //     const data = await res.json();
+        // //     if (data?.errors) setErrors(data.errors);
+        //   }
+        // );
         
-    };
-    
+    };   
     return (
         <>
         <h1>Write a review</h1>
@@ -59,7 +57,6 @@ const CreateReviewModal = (props) => {
                 <option>4</option>
                 <option>5</option>
             </select>
-            {/* {errors && <p>{errors}</p>} */}
           <button type="submit" className='btn'>Submit</button>
           </label>
         </form>

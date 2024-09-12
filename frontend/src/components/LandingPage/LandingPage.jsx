@@ -21,8 +21,15 @@ const LandingPage = () => {
       <>
       {allSpots && 
       <h1>Welcome!</h1>}
-      <Gallery spots={allSpots}/>
-
+          <div className='gallery'>
+          <ul className='card'>{newFirst.map(spot => {
+          return (
+          <li key={spot.id}>
+            <Gallery spot={spot}/>
+          </li>
+          )}
+          )}</ul>
+          </div>
       </>
       )
 };

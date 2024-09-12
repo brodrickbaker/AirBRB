@@ -32,7 +32,7 @@ const ShowReviews = (props) => {
 
     useEffect(() => {
       dispatch(getReviews(spotId))
-      setReviewed(reviews.find(review => user.id == review.userId))
+      setReviewed(reviews.find(review => user?.id == review.userId))
     }, [])
 if(reviews.length){
   return (   
@@ -64,7 +64,7 @@ if(reviews.length){
             <button className="btn">
                 <OpenModalButton
                 buttonText="Write a Review"
-                modalComponent={<CreateReviewModal spot={spot} />}
+                modalComponent={<CreateReviewModal spot={spot} user={user} />}
               /></button>}</h2>
         <div className="card">
             <h3>Be the first tor write a review</h3>

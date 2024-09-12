@@ -30,14 +30,17 @@
     flex-direction: row;
     flex-wrap: wrap;
     grid-area: box;
-    width: 250px;
+    width: 320px;
     justify-self: end;
 }
 #callout-box .btn {
-    width: 80%;
+    width: 70%;
     font-size: 20px;
     color: #ecdfdf;
     height: 40px;
+}
+#callout-box h3 {
+    align-self: center;
 }
 
 .images > .card {
@@ -59,9 +62,9 @@
     flex: 1;
 }
 
-li > .card {
-    width: 225px;
-    height: 225px;
+.spot-image img{
+    width: 250px;
+    height: 250px;
     box-sizing: border-box;
     margin: 2px;
 }

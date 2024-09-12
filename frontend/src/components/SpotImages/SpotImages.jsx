@@ -9,7 +9,7 @@ const SpotImages = (props) => {
       <ul >
         {images.map(image => {
             return (
-                <li key={image.id}>
+                <li key={image.id} className="spot-image"> 
                     <img src={image.url} 
                     className="card"
                     />

@@ -26,7 +26,7 @@ const ShowSpot = () => {
         <SpotImages spot={spot} />
       </div>
       <div className="sub">
-        <h3>Hosted By {spot.Owner.firstName} {spot.Owner.lastName}</h3>
+        <h3>Hosted By {spot.Owner.firstName + ' ' + spot.Owner.lastName}</h3>
         <p className="description">{spot.description}</p>
         <CalloutBox spot={spot} />
       </div>

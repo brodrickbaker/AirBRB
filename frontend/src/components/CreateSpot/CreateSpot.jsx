@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { createSpot, addPic } from '../../store/spot';
+import { createSpot } from '../../store/spot';
 import './CreateSpot.css'
 
 const CreateSpot = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const spot = useSelector(state => state.spot.spot)
     const [country, setCountry] = useState('');
     const [address, setAddress] = useState('');
     const [city, setCity] = useState('');
@@ -23,7 +22,7 @@ const CreateSpot = () => {
     const [url3, setUrl3] = useState('');
     const [url4, setUrl4] = useState(''); 
     const [errors, setErrors] = useState({});
-
+    const spot = useSelector(state => state.spot.spot)
     const updateCountry= (e) => setCountry(e.target.value);
     const updateAddress = (e) => setAddress(e.target.value);
     const updateCity = (e) => setCity(e.target.value);
@@ -60,6 +59,8 @@ const CreateSpot = () => {
         e.preventDefault();
         setErrors({})
 
+        const images = [{url: preview, preview: true}, {url: url1}, {url: url2}, {url: url3}, {url: url4}]
+
         const payload = {
           country,
           address,
@@ -69,30 +70,17 @@ const CreateSpot = () => {
           lng: parseFloat(lng),
           description,
           name,
-          price: parseInt(price)
+          price: parseInt(price),
+          images
         };
   
         const createdSpot = await dispatch(createSpot(payload))
         setErrors(createdSpot.errors)
-  
+      
         if (!errors) {
-          
-          const previewImage = {
-            spotId: spot.id,
-            url: preview,
-            preview: true
-          }
-
-          const newPic = await dispatch(addPic(spot, previewImage))
-          setErrors(newPic)
-          console.log(newPic, errors, spot)
-          // setTimeout(() => {
-          //   if (!errors) {
-          //     reset();
-          //     navigate(`/`);
-          //   }
-          // }, 1000)
-          
+          console.log(spot)
+          reset();
+          navigate(`/api/spots/${spot.id}`)
         }
       };
 

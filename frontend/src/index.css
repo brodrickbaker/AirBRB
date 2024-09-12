@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap&family=Tajawal:wght@200;300;400;500;700;800;900&display=swap&family=SUSE:wght@100..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap&family=Tajawal:wght@200;300;400;500;700;800;900&display=swap&family=SUSE:wght@100..800&display=swap&family=Playpen+Sans:wght@100..800&display=swap');
 
 * {
     font-family: "Tajawal", sans-serif;
@@ -28,6 +28,12 @@ h2, h5 {
     font-optical-sizing: auto;
     color: #7ba7e5;
 }
+
+h3 {
+    font-family: "Playpen Sans", cursive;
+    font-optical-sizing: auto;
+  }
+
 a {
     text-decoration: none;
     color: #a3a3a3;
@@ -57,14 +63,15 @@ a {
     border: 1px solid black;
     display: grid;
     grid-auto-flow: column;
-    grid-template-columns: .25fr 2fr .25fr;
+    grid-template-columns: .25fr 1.5fr .25fr;
     justify-items: center;
     background-color: #332B2B;
     border-radius: 10px;
     margin: 10px;
-    padding: 5px 40px;
+    padding: 5px 20px;
     position: sticky;
-    top: 10px
+    top: 10px;
+    min-width: 750px 
 }
 
 .active {
@@ -128,6 +135,11 @@ ul, li {
     list-style: none;
 }
 
+.buttons {
+    display: flex;
+    justify-content: space-around;
+}
+
 @media screen and (max-width:850px) {
     .nav {
         justify-items: space-around;
@@ -167,10 +179,6 @@ ul, li {
         margin: 10px 50px;
         width: 300px;
     }
-
-    * {
-        flex-grow: 1;
-    }
 }
 
 @media screen and (max-width:500px) {
@@ -179,6 +187,7 @@ ul, li {
     display: flex;
     flex-direction: row;
     justify-items: space-evenly;
+    min-width: 500px
 }
 
 .profile-dropdown {
@@ -187,6 +196,11 @@ ul, li {
 #spot-form  > form > * {
     margin: 10px 50px;
     width: auto;
+}
+.end-align {
+    justify-self: end;
+    position: absolute;
+    left: 300px;
 }
 
 }

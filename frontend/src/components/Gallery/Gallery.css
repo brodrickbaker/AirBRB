@@ -1,22 +1,23 @@
 .gallery ul {
    display: flex; 
    flex-wrap: wrap;
-   justify-content: space-between;
+   justify-content: center;
+   
 }
 
 .gallery  li {
     display: flex;
     flex-direction: column;
-    min-width: 200px;
-    max-width: 400px;
     max-height: auto;
     box-sizing: border-box;
+    width: 375px;
 }
 
 .gallery img {
+    box-sizing: border-box;
     width: 350px;
     height: 350px;
-    box-sizing: border-box;
+
 }
 
 .gallery img:hover {
@@ -29,9 +30,9 @@
 }
 
 .info h3 {
-    padding-top: 0;
-    padding-left: 15px;
-    margin: 0px
+    padding: 5px 10px;
+    margin: 0px;
+    font-size: 15px;
 }
 
 #star {
@@ -41,4 +42,5 @@
 
 .gallery {
     flex-direction: row;
+    min-width: 500px;
 }

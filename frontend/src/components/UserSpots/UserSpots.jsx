@@ -12,12 +12,23 @@ const UserSpots = () => {
     const userSpots = Object.values(allSpots).filter(spot => spot.ownerId == user.id);
     
     return (
-    <> {userSpots &&
-    <div>
-        <h1>Your Spots</h1>
-      <Gallery spots={userSpots}/>
-    </div>}
-    </>
+      <>
+      {userSpots && 
+      <h1>Your Spots</h1>}
+          <div className='gallery'>
+          <ul className='card'>{userSpots.map(spot => {
+          return (
+          <li key={spot.id}>
+            <Gallery spot={spot}/>
+            <div className="buttons">
+              <button className="btn">Update</button>
+              <button className="btn">Delete</button>
+            </div>
+          </li>
+          )}
+          )}</ul>
+          </div>
+      </>
   )
 };
 

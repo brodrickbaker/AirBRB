@@ -27,13 +27,12 @@
     top: 50px;
     right: 50px;
     display: flex;
-    min-width: 100px;
+    min-width: 125px;
     flex-direction: column;
     background-color:  #332B2B;
     box-shadow: 2px 2px 5px #faeded;
     margin-right: 10px;
     border-radius: 5px;
-    padding: 10px;
 }
 
 .user {
@@ -41,6 +40,16 @@
     padding: 5px;
 }
 
+.user li {
+    padding: 5px;
+}
+
+
+
 .end-align {
     justify-self: end;
+}
+
+.expendable{
+    font-family: "Playpen Sans", cursive;
 }
