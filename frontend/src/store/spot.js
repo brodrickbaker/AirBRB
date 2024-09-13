@@ -65,12 +65,9 @@ const postReview = review => ({
         body: JSON.stringify({country, address, city, state, lat, lng, description, name, price})
       }).catch(async res => await res.json())
       let newSpot = await res.json();
-      
-      if (res.ok) {
-        
+      if (res.ok) {       
         const newRes = await fetch(`/api/spots/${newSpot.id}`)
         newSpot = await newRes.json();
-        console.log(newSpot)
         dispatch(getSpot(newSpot));
         for await (let image of images){
           if(image.url){
@@ -127,7 +124,7 @@ const spotReducer = (state = initialState, action) => {
         case DELETE_SPOT: {
           const newState = {...state}
           newState.spot = null
-          delete newState[action.id]
+          delete newState.spots[action.id]
           return newState
         }
         case GET_REVIEWS: {
