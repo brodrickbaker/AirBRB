@@ -111,4 +111,32 @@ router.delete('/:id', requireAuth, async (req, res) => {
     await userReview.destroy().then(() => res.json({message: 'Successfully deleted'}))
 })
 
+router.get('/:id', requireAuth, async (req, res) => {
+    const { id } = req.params
+    const review = await Review.findOne({
+        where: {
+            id
+        },
+        include: [
+            { 
+                model: User,
+                attributes: ["id", "firstName", "lastName"]
+             },
+            { 
+                model: Spot,
+                attributes: ["id", "ownerId", "address", "city", "state", "country",
+                            "lat", "lng", "name", "price"],
+                            include: {
+                                model: SpotImage
+                            }
+             },
+            { 
+                model: ReviewImage,
+                attributes: ["id", "url"]
+            }
+        ]
+    })
+    res.json(review)
+})
+
   module.exports = router;

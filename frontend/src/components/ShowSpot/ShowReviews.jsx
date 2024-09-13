@@ -29,26 +29,26 @@ const ShowReviews = (props) => {
     const user = useSelector(state => state.session.user);
     const [reviewed, setReviewed] = useState(false)
     
-
     useEffect(() => {
       dispatch(getReviews(spotId))
       setReviewed(reviews.find(review => user?.id == review.userId))
-    }, [])
+    }, [dispatch])
+
 if(reviews.length){
   return (   
     <div>
         <h2>{' ⭐ ' + spot.avgStarRating  + '  •  ' + spot.numReviews + ' ' + sOrNah(reviews.length)}&nbsp;&nbsp;
-            {!reviewed && 
+            {!reviewed && user &&
             <button className="btn">
                 <OpenModalButton
                 buttonText="Write a Review"
-                modalComponent={<CreateReviewModal spot={spot}/>}
+                modalComponent={<CreateReviewModal spot={spot} user={user}/>}
               /></button>}</h2>
          <ul className="card" id="review">{reviews.map(review => {       
             const createdAt = months[review.createdAt.slice(5,7)] + ' ' + review.createdAt.slice(0,4);    
             return (
                 <li key={review.id}>
-                    <h3>{review.User.firstName}</h3>
+                    <h3>{review.User?.firstName}</h3>
                     <h3>{createdAt}</h3>
                     <p>{review.review}</p>
                 </li>

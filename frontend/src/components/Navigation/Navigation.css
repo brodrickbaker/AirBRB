@@ -33,6 +33,7 @@
     box-shadow: 2px 2px 5px #faeded;
     margin-right: 10px;
     border-radius: 5px;
+    padding-left: 0;
 }
 
 .user {

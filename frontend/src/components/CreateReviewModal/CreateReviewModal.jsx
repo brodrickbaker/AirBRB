@@ -2,18 +2,17 @@ import { useState,  } from 'react';
 import { addReview,  } from '../../store/spot';
 import { useDispatch } from 'react-redux';
 import { useModal } from '../../context/Modal';
+import { getReviews } from '../../store/spot';
 
 const CreateReviewModal = (props) => {
     const {spot, user} = props
     const [review, setReview] = useState("");
     const [stars, setStars] = useState(5)
-    // const [errors, setErrors] = useState({});
+    const [errors, setErrors] = useState({});
     const { closeModal } = useModal();
     const dispatch = useDispatch()
 
-    // useEffect(() => {
-    //     dispatch(getReviews(spot.id))
-    //   })
+
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -23,23 +22,23 @@ const CreateReviewModal = (props) => {
             review,
             stars
         }
-        return dispatch(addReview(payload))
+        return dispatch(addReview(payload)).then(dispatch(getReviews(spot.id)))
         .then(closeModal())
-        // .catch(async res => {
-        // //     const data = await res.json();
-        // //     if (data?.errors) setErrors(data.errors);
-        //   }
-        // );
+        .catch(async res => {
+            const data = await res.json();
+            if (data?.message) setErrors(data.message);
+          }
+        );
         
     };   
     return (
         <>
-        <h1>Write a review</h1>
+        <h1>How was your stay?</h1>
         <form onSubmit={handleSubmit}>
-          <label>
+          <label name='review'>
             <textarea
               value={review}
-              placeholder='Write Your Review'
+              placeholder='Just a quick review'
               onChange={(e) => setReview(e.target.value)}
               rows='10'
               required>
@@ -58,6 +57,7 @@ const CreateReviewModal = (props) => {
                 <option>5</option>
             </select>
           <button type="submit" className='btn'>Submit</button>
+          {errors && <span>{errors.message}</span>}
           </label>
         </form>
       </>

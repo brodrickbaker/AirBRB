@@ -2,7 +2,7 @@
 const SpotImages = (props) => {
   const {spot} = props;
   const images = spot.SpotImages.filter(image => !image.preview);
-   if(images.length){ 
+   if(spot.SpotImages.length){ 
   return (
     <div className="card">
       <img src={spot.SpotImages.find(image=> image.preview).url} className="main"/>

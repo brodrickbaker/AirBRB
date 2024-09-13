@@ -3,7 +3,7 @@ import { csrfFetch } from "./csrf";
 const LOAD_SPOTS = 'spots/LOAD_SPOTS';
 const GET_SPOT = 'spots/GET_SPOT'
 const GET_REVIEWS = 'spots/GET_REVIEWS'
-const POST_SPOT = 'spots/POST_SPOT'
+const DELETE_SPOT = 'spots/DELETE_SPOT'
 const POST_REVIEW = 'spots/POST_REVIEW'
 
 export const sOrNah = reviews => reviews !== 1 ? 'Reviews' : 'Review';
@@ -18,14 +18,14 @@ const getSpot = spot => ({
     spot
 })
 
+const deleteSpot = id => ({
+  type: DELETE_SPOT,
+  id
+})
+
 const fetchReviews = reviews => ({
     type: GET_REVIEWS,
     reviews
-})
-
-const postSpot = spot => ({
-  type: POST_SPOT,
-  spot
 })
 
 const postReview = review => ({
@@ -64,9 +64,14 @@ const postReview = review => ({
         method: 'POST',
         body: JSON.stringify({country, address, city, state, lat, lng, description, name, price})
       }).catch(async res => await res.json())
+      let newSpot = await res.json();
+      
       if (res.ok) {
-        const newSpot = await res.json();
-        dispatch(postSpot(newSpot));
+        
+        const newRes = await fetch(`/api/spots/${newSpot.id}`)
+        newSpot = await newRes.json();
+        console.log(newSpot)
+        dispatch(getSpot(newSpot));
         for await (let image of images){
           if(image.url){
           csrfFetch(`/api/spots/${newSpot.id}/images`, {
@@ -74,7 +79,16 @@ const postReview = review => ({
               body: JSON.stringify({ ...image})
           })
       }}}
-      return res;
+      return newSpot;
+  }
+
+  export const dropSpot = id => async dispatch => {
+    await csrfFetch(`/api/spots/${id}`,
+      {
+        method: 'DELETE'
+      }
+    ).catch(res => res.json())
+    dispatch(deleteSpot(id))
   }
 
   export const addReview = (review) => async dispatch => {
@@ -83,7 +97,7 @@ const postReview = review => ({
         method: 'POST',
         body: JSON.stringify(review)
       })
-      const newReview = await res.json();
+      const newReview = await res.json()
       dispatch(postReview(newReview));
       return res; 
   }
@@ -110,20 +124,18 @@ const spotReducer = (state = initialState, action) => {
             newState.spot = action.spot
             return newState
         }
-        case GET_REVIEWS: {
-            return {
-                ...state,
-                spots: {...state.spots},
-                spot: state.spot || null,
-                reviews: action.reviews
-            }
-        }
-        case POST_SPOT : {
+        case DELETE_SPOT: {
           const newState = {...state}
-          newState.spots[action.spot.id] = action.spot
-          newState.spot = action.spot
+          newState.spot = null
+          delete newState[action.id]
           return newState
         }
+        case GET_REVIEWS: {
+          const newState = { ...state}
+          newState.reviews = action.reviews  
+          return newState
+        }
+
         case POST_REVIEW: {
           const newState = {...state}
           newState.reviews = [...newState.reviews, action.review]
