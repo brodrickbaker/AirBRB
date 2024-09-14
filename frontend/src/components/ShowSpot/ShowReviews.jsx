@@ -32,7 +32,7 @@ const ShowReviews = (props) => {
     useEffect(() => {
       dispatch(getReviews(spotId))
       setReviewed(reviews.find(review => user?.id == review.userId))
-    }, [dispatch])
+    }, [dispatch, reviews, spotId, user])
 
 if(reviews.length){
   return (   

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { update, getSpots } from '../../store/spot';
+import { updateSpot, getSpots } from '../../store/spot';
 import { useSelector } from 'react-redux';
 
 const UpdateSpot = () => {
@@ -70,7 +70,7 @@ const UpdateSpot = () => {
         };
         
         if(!urlError){
-        const createdSpot = await dispatch(update(payload))
+        const createdSpot = await dispatch(updateSpot(payload))
         setErrors(createdSpot.errors)
         if (!errors) {
           dispatch(getSpots());

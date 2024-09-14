@@ -12,7 +12,7 @@ const UserSpots = () => {
 
     useEffect(() => {
       dispatch(getSpots());
-    }, [dispatch])
+    }, [dispatch, spots])
 
     const allSpots = useSelector(state => state.spot.spots);
     const userSpots = Object.values(allSpots).filter(spot => spot.ownerId == user.id);
@@ -31,7 +31,8 @@ const UserSpots = () => {
       
     } 
 
-    const handleUpdate = async (spot) => {
+    const handleUpdate = (e) => async (spot) => {
+      e.preventDefault
       await dispatch(getOneSpot(spot.id)).then(()=> navigate(`/spots/${spot.id}/update`))
     }
     return (

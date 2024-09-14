@@ -5,7 +5,6 @@ const GET_SPOT = 'spots/GET_SPOT'
 const GET_REVIEWS = 'spots/GET_REVIEWS'
 const DELETE_SPOT = 'spots/DELETE_SPOT'
 const POST_REVIEW = 'spots/POST_REVIEW'
-const UPDATE_SPOT = 'spots/UPDATE_SPOT'
 
 export const sOrNah = reviews => reviews !== 1 ? 'Reviews' : 'Review';
 
@@ -32,11 +31,6 @@ const fetchReviews = reviews => ({
 const postReview = review => ({
   type: POST_REVIEW,
   review
-})
-
-const updateSpot = spot => ({
-  type: UPDATE_SPOT,
-  spot
 })
 
   export const getSpots = () => async dispatch => {
@@ -106,7 +100,7 @@ const updateSpot = spot => ({
       return res; 
   }
 
-  export const update = spot => async dispatch => {
+  export const updateSpot = spot => async dispatch => {
     const {id, country, address, city, state, lat, lng, description, name, price, images} = spot
     const res = await csrfFetch(`/api/spots/${id}`,
       {
