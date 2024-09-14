@@ -5,6 +5,7 @@ const GET_SPOT = 'spots/GET_SPOT'
 const GET_REVIEWS = 'spots/GET_REVIEWS'
 const DELETE_SPOT = 'spots/DELETE_SPOT'
 const POST_REVIEW = 'spots/POST_REVIEW'
+const UPDATE_SPOT = 'spots/UPDATE_SPOT'
 
 export const sOrNah = reviews => reviews !== 1 ? 'Reviews' : 'Review';
 
@@ -31,6 +32,11 @@ const fetchReviews = reviews => ({
 const postReview = review => ({
   type: POST_REVIEW,
   review
+})
+
+const updateSpot = spot => ({
+  type: UPDATE_SPOT,
+  spot
 })
 
   export const getSpots = () => async dispatch => {
@@ -64,7 +70,8 @@ const postReview = review => ({
         method: 'POST',
         body: JSON.stringify({country, address, city, state, lat, lng, description, name, price})
       }).catch(async res => await res.json())
-      let newSpot = await res.json();
+      
+      let newSpot = await res.json()
       if (res.ok) {       
         const newRes = await fetch(`/api/spots/${newSpot.id}`)
         newSpot = await newRes.json();
@@ -76,7 +83,7 @@ const postReview = review => ({
               body: JSON.stringify({ ...image})
           })
       }}}
-      return newSpot;
+      return res;
   }
 
   export const dropSpot = id => async dispatch => {
@@ -97,6 +104,28 @@ const postReview = review => ({
       const newReview = await res.json()
       dispatch(postReview(newReview));
       return res; 
+  }
+
+  export const update = spot => async dispatch => {
+    const {id, country, address, city, state, lat, lng, description, name, price, images} = spot
+    const res = await csrfFetch(`/api/spots/${id}`,
+      {
+        method: 'PUT',
+        body: JSON.stringify({country, address, city, state, lat, lng, description, name, price})
+      }
+    )
+      if (res.ok) {       
+        const newRes = await fetch(`/api/spots/${spot.id}`)
+        const newSpot = await newRes.json();
+        dispatch(getSpot(newSpot));
+        for await (let image of images){
+          if(image.url){
+          csrfFetch(`/api/spots/${newSpot.id}/images`, {
+              method: 'POST',
+              body: JSON.stringify({ ...image})
+          })
+      }}}
+      return res;
   }
 
 

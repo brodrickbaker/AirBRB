@@ -80,12 +80,10 @@ a {
     color: #faeded;
 }
 
-.disabled {
+.btn.disabled {
     font-weight: bold;
     color:black;
-}
-.disabled:hover{
-    color:black;
+    background-color:salmon;
 }
 
 img {
@@ -116,6 +114,7 @@ input, select, textarea {
     font-family: "DM Serif Display", sans-serif;
     font-weight: bold;
 }
+
 form {
     display: flex;
     flex-direction: column;
@@ -138,6 +137,24 @@ ul, li {
 .buttons {
     display: flex;
     justify-content: space-around;
+}
+
+#demo-login {
+    padding: 5px;
+    border-radius: 5px;
+    text-decoration: underline;
+
+}
+#demo-login:hover {
+    cursor: pointer;
+    background-color: #262020;
+}
+
+.error {
+    color: #ff0000;
+    font-weight: bold;
+    line-height: 80%;
+
 }
 
 @media screen and (max-width:850px) {
@@ -185,9 +202,9 @@ ul, li {
 
 .nav {
     display: flex;
-    flex-direction: row;
-    justify-items: space-evenly;
-    min-width: 500px
+    flex-direction: column;
+    align-items: center;
+    min-width: 350px
 }
 
 .profile-dropdown {
@@ -196,11 +213,6 @@ ul, li {
 #spot-form  > form > * {
     margin: 10px 50px;
     width: auto;
-}
-.end-align {
-    justify-self: end;
-    position: absolute;
-    left: 300px;
 }
 
 }

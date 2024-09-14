@@ -21,7 +21,15 @@ const LoginFormModal = () => {
           }
         );
     };
-    
+
+    const loginDemo = (e) => {
+      e.preventDefault
+      return dispatch(sessionActions.login({credential: 'Demo-lition', password: 'password'}))
+      .then(closeModal)
+    }
+
+    const disabled = (password.length < 6 || credential.length < 4)? 'disabled' : ''
+
     return (
         <>
         <h1>Log In</h1>
@@ -44,8 +52,9 @@ const LoginFormModal = () => {
               required
             />
           </label>
-          {errors.credential && <p>{errors.credential}</p>}
-          <button type="submit" className='btn'>Log In</button>
+           <p className='error'>{errors.credential}</p>
+          <button type="submit" className={`btn ${disabled}`} disabled={disabled}>Log In</button>
+          <p id='demo-login' onClick={loginDemo}>Demo User</p>
         </form>
       </>
     )

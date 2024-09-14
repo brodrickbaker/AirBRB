@@ -38,6 +38,8 @@ function SignupFormModal() {
       confirmPassword: "Confirm Password field must be the same as the Password field"
     });
   };
+  
+  const disabled = (password.length < 6 || username.length < 4 || !email || !firstName || !lastName)? 'disabled' : ''
 
   return (
     <>
@@ -52,7 +54,7 @@ function SignupFormModal() {
             required
           />
         </label>
-        {errors.email && <p>{errors.email}</p>}
+        <p className='error'>{errors.email}</p>
         <label>
           <input
             type="text"
@@ -62,7 +64,7 @@ function SignupFormModal() {
             required
           />
         </label>
-        {errors.username && <p>{errors.username}</p>}
+        <p className='error'>{errors.username}</p>
         <label>
           <input
             type="text"
@@ -72,7 +74,7 @@ function SignupFormModal() {
             required
           />
         </label>
-        {errors.firstName && <p>{errors.firstName}</p>}
+        <p className='error'>{errors.firstName}</p>
         <label>
           <input
             type="text"
@@ -82,7 +84,7 @@ function SignupFormModal() {
             required
           />
         </label>
-        {errors.lastName && <p>{errors.lastName}</p>}
+        <p className='error'>{errors.lastName}</p>
         <label>
           <input
             type="password"
@@ -92,7 +94,7 @@ function SignupFormModal() {
             required
           />
         </label>
-        {errors.password && <p>{errors.password}</p>}
+         <p className='class'>{errors.password}</p>
         <label>
           <input
             type="password"
@@ -102,8 +104,8 @@ function SignupFormModal() {
             required
           />
         </label>
-        {errors.confirmPassword && <p>{errors.confirmPassword}</p>}
-        <button type="submit" className='btn'>Sign Up</button>
+         <p className='error'>{errors.confirmPassword}</p>
+        <button type="submit" className={`btn ${disabled}`}  disabled={disabled}>Sign Up</button>
       </form>
     </>
   );

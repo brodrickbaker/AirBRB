@@ -14,12 +14,27 @@
     padding:  20px 50px;
     width: 600px;
 }
-
+/* 
 #spot-form  > form > * {
     width: 500px;
     margin: 10px 50px;
-}
+} */
 #spot-form span {
     color: red;
+    font-weight: bold;
     line-height: 80%;
+}
+
+.inline {
+    display: grid;
+}
+
+.address {
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: 1fr 1fr;
+}
+
+.latlng {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
 }

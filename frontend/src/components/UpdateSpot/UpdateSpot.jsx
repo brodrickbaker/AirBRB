@@ -1,31 +1,33 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { createSpot, getSpots } from '../../store/spot';
-import './CreateSpot.css'
+import { useNavigate, useParams } from 'react-router-dom';
+import { update, getSpots } from '../../store/spot';
+import { useSelector } from 'react-redux';
 
-const CreateSpot = () => {
+const UpdateSpot = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const {spotId} = useParams()
 
-    const [country, setCountry] = useState('');
-    const [address, setAddress] = useState('');
-    const [city, setCity] = useState('');
-    const [state, setState] = useState('');
-    const [lat, setLatitude] = useState('');
-    const [lng, setLongitude] = useState('');
-    const [description, setDescription] = useState('');
-    const [name, setTitle] = useState('');
-    const [price, setPrice] = useState('');
-    const [preview, setPreview] = useState('');
+    const spot = useSelector(state => state.spot.spot)
+
+    const [country, setCountry] = useState(spot? spot.country : '');
+    const [address, setAddress] = useState(spot? spot.address: '');
+    const [city, setCity] = useState(spot? spot.address: '');
+    const [state, setState] = useState(spot? spot.state: '');
+    const [lat, setLatitude] = useState(spot? spot.lat: '');
+    const [lng, setLongitude] = useState(spot? spot.lng: '');
+    const [description, setDescription] = useState(spot? spot.description: '');
+    const [name, setTitle] = useState(spot? spot.name: '');
+    const [price, setPrice] = useState(spot? spot.price: '');
+    const [preview, setPreview] = useState(spot.SpotImages[0]? spot.SpotImages[0].url: '');
     const [url1, setUrl1] = useState('');
     const [url2, setUrl2] = useState('');
     const [url3, setUrl3] = useState('');
     const [url4, setUrl4] = useState(''); 
     const [errors, setErrors] = useState({});
     const [urlError, setUrlError] = useState('');
-    const [previewError, setPreviewError] = useState('');
     
     const updateCountry= (e) => setCountry(e.target.value);
     const updateAddress = (e) => setAddress(e.target.value);
@@ -41,39 +43,20 @@ const CreateSpot = () => {
     const updateUrl2 = (e) => setUrl2((e.target.value));
     const updateUrl3 = (e) => setUrl3((e.target.value));
     const updateUrl4 = (e) => setUrl4((e.target.value));
-
-    const reset = () => {
-      setCountry('');
-      setAddress('');
-      setCity('');
-      setState('');
-      setLatitude('');
-      setLongitude ('');    
-      setTitle('');
-      setDescription('');
-      setPrice('');
-      setPreview('');
-      setUrl1('');
-      setUrl2('');
-      setUrl3('');
-      setUrl4('');
-    };
   
       const handleSubmit = async (e) => {
         e.preventDefault();
         setErrors({})
-        setPreviewError('')
         setUrlError('')
 
         const images = [{url: preview, preview: true}, {url: url1}, {url: url2}, {url: url3}, {url: url4}]
         
-        preview? setPreviewError(''): setPreviewError('Preview image is requred.')
         images.forEach(image => {
           (image.url && !image.url.endsWith('.png' || '.jpg' || '.jpeg'))? setUrlError('Image URL must end in .png, .jpg, or .jpeg'): setUrlError('')
         })
 
-        
         const payload = {
+          id: spotId,
           country,
           address,
           city,
@@ -86,13 +69,12 @@ const CreateSpot = () => {
           images
         };
         
-        if(!urlError && !previewError){
-        const createdSpot = await dispatch(createSpot(payload))
+        if(!urlError){
+        const createdSpot = await dispatch(update(payload))
         setErrors(createdSpot.errors)
         if (!errors) {
-          reset();
           dispatch(getSpots());
-          navigate(`/spots/${createdSpot.id}`)
+          navigate(`/spots/${spotId}`)
         } 
       }
       };
@@ -100,7 +82,7 @@ const CreateSpot = () => {
       return (
         <section className="card" id='spot-form'>
           <form  onSubmit={handleSubmit}>
-          <h1>Create a new Spot</h1>
+          <h1>Update Your Spot</h1>
           <div className='card form-card'>
           <h2>Where&apos;s your place located?</h2>
           <h3>Guests will only get your exact address once they book a reservation.</h3>
@@ -212,7 +194,7 @@ const CreateSpot = () => {
               placeholder="Preview Image URL"
               value={preview}
               onChange={updatePreview} />
-              <label htmlFor='preview'>{previewError && <span> {previewError}</span> || urlError && <span> {urlError}</span>}</label>
+              <label htmlFor='preview'>{urlError && <span> {urlError}</span>}</label>
               <input
               name='url1'
               type="text"
@@ -242,10 +224,10 @@ const CreateSpot = () => {
               onChange={updateUrl4} />
                <label htmlFor='url4'>{urlError && <span> {urlError}</span>}</label>
             </div>
-            <button type="submit" className='btn' >Create Spot</button>
+            <button type="submit" className='btn' >Update Spot</button>
           </form>
         </section>
       );
 };
 
-export default CreateSpot;
+export default UpdateSpot;

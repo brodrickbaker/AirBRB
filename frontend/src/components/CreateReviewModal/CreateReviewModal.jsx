@@ -1,8 +1,8 @@
-import { useState,  } from 'react';
-import { addReview,  } from '../../store/spot';
+import { useState } from 'react';
+import { addReview } from '../../store/spot';
 import { useDispatch } from 'react-redux';
 import { useModal } from '../../context/Modal';
-import { getReviews } from '../../store/spot';
+import { getReviews, getOneSpot } from '../../store/spot';
 
 const CreateReviewModal = (props) => {
     const {spot, user} = props
@@ -10,9 +10,7 @@ const CreateReviewModal = (props) => {
     const [stars, setStars] = useState(5)
     const [errors, setErrors] = useState({});
     const { closeModal } = useModal();
-    const dispatch = useDispatch()
-
-
+    const dispatch = useDispatch()  
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -22,7 +20,7 @@ const CreateReviewModal = (props) => {
             review,
             stars
         }
-        return dispatch(addReview(payload)).then(dispatch(getReviews(spot.id)))
+        return dispatch(addReview(payload)).then(dispatch(getOneSpot(spot.id))).then(dispatch(getReviews(spot.id)))
         .then(closeModal())
         .catch(async res => {
             const data = await res.json();

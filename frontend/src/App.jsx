@@ -7,6 +7,7 @@ import LandingPage from './components/LandingPage';
 import ShowSpot from './components/ShowSpot';
 import CreateSpot from './components/CreateSpot';
 import UserSpots from './components/UserSpots';
+import UpdateSpot from './components/UpdateSpot';
 
 function Layout() {
   const dispatch = useDispatch();
@@ -46,7 +47,11 @@ const router = createBrowserRouter([
       {
         path: '/spots/current',
         element: <UserSpots />
-      }
+      },
+      {
+        path: '/spots/:spotId/update',
+        element: <UpdateSpot />
+      },
     ]
   }
 ]);
