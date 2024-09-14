@@ -1,21 +1,19 @@
 import Gallery from "../Gallery";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { dropSpot, getSpots, getOneSpot } from "../../store/spot";
+import { dropSpot, getUserSpots, getOneSpot } from "../../store/spot";
 import { useEffect, useState } from "react";
 
 const UserSpots = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch()
-    const user = useSelector(state => state.session.user);
     const [spots, setSpots] = useState(0); 
 
     useEffect(() => {
-      dispatch(getSpots());
+      dispatch(getUserSpots());
     }, [dispatch, spots])
 
-    const allSpots = useSelector(state => state.spot.spots);
-    const userSpots = Object.values(allSpots).filter(spot => spot.ownerId == user.id);
+    const userSpots = useSelector(state => state.spot.spots);
 
     const newFirst = []
   
@@ -25,7 +23,7 @@ const UserSpots = () => {
 
     const handleDelete = async (spot) => {
      if(confirm('Are you sure you want to delete?')){
-      await dispatch(dropSpot(spot.id)).then(()=> dispatch(getSpots())) 
+      await dispatch(dropSpot(spot.id)).then(()=> dispatch(getUserSpots())) 
       setSpots(userSpots.length)
       }
     } 
@@ -36,8 +34,8 @@ const UserSpots = () => {
     }
     return (
       <>
-      {userSpots && 
-      <h1>Your Spots</h1>}
+      <h1>Your Spots</h1>
+      {newFirst.length?
           <div className='gallery'>
           <ul className='card'>{newFirst.map(spot => {
           return (
@@ -56,7 +54,8 @@ const UserSpots = () => {
           </li>
           )}
           )}</ul>
-          </div>
+          </div>: 
+          <button className="btn" onClick={()=> navigate('/spots/new')}>Create a New Spot</button>}
       </>
   )
 };

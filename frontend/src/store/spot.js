@@ -40,6 +40,15 @@ const postReview = review => ({
       dispatch(loadSpots(list.Spots));
     }
   };
+
+  export const getUserSpots = () => async dispatch => {
+    const res = await fetch(`/api/spots/current`);
+    if (res.ok) {
+      const list = await res.json();
+      console.log(list)
+      dispatch(loadSpots(list.Spots));
+    }
+  }
   
   export const getOneSpot = id => async dispatch => {
     const res = await fetch(`/api/spots/${id}`);
@@ -138,11 +147,13 @@ const spotReducer = (state = initialState, action) => {
     switch (action.type) {
         case LOAD_SPOTS: {
           const newState = {...state};
+          newState.spots = {};
           action.spots.forEach(spot => {
             newState.spots[spot.id] = spot;
           });
           return newState;
         }
+
         case GET_SPOT: {
             const newState = {...state}
             newState.spot = action.spot
@@ -159,7 +170,6 @@ const spotReducer = (state = initialState, action) => {
           newState.reviews = action.reviews  
           return newState
         }
-
         case POST_REVIEW: {
           const newState = {...state}
           newState.reviews = [...newState.reviews, action.review]
