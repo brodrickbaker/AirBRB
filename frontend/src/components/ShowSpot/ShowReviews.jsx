@@ -30,17 +30,16 @@ const ShowReviews = (props) => {
     const [reviewed, setReviewed] = useState(false)
     reviews = Object.values(reviews).reverse()  
 
-    
     useEffect(() => {
       dispatch(getReviews(spotId))
-      setReviewed(reviews.find((review => review.User.id == user.id)))
+      setReviewed(reviews.find((review => review.userId == user?.id)))
     }, [dispatch, reviewed])
 
 
     const handleDelete = async (id) => {
         if(confirm('Are you sure you want to delete?')){
             await dispatch(dropReview(id)).then(() => dispatch(getReviews(spotId)).then(() => dispatch(getOneSpot(spotId)))) 
-            setReviewed(reviews.find((review => review.User.id == user.id)))
+            setReviewed(reviews.find((review => review.userId == user?.id)))
             }
     }
 
@@ -58,11 +57,10 @@ if(reviews.length){
             const createdAt = months[review.createdAt.slice(5,7)] + ' ' + review.createdAt.slice(0,4);    
             return (
                 <li key={review.id}>
-                    <h3>{review.User?.firstName}</h3>
+                    <h3>{review.User.firstName}</h3>
                     <h3>{createdAt}</h3>
                     <p>{review.review}</p>
-                    {console.log(review)}
-                    {review.userId == user.id &&
+                    {review.userId == user?.id &&
                     <button
                     className="btn"
                     onClick={() => handleDelete(review.id)}
