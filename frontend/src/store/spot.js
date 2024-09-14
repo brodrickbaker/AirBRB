@@ -5,6 +5,7 @@ const GET_SPOT = 'spots/GET_SPOT'
 const GET_REVIEWS = 'spots/GET_REVIEWS'
 const DELETE_SPOT = 'spots/DELETE_SPOT'
 const POST_REVIEW = 'spots/POST_REVIEW'
+const DELETE_REVIEW = 'spots/DELETE_REVIEW'
 
 export const sOrNah = reviews => reviews !== 1 ? 'Reviews' : 'Review';
 
@@ -30,6 +31,11 @@ const fetchReviews = reviews => ({
 
 const postReview = review => ({
   type: POST_REVIEW,
+  review
+})
+
+const deleteReview = review => ({
+  type: DELETE_REVIEW,
   review
 })
 
@@ -135,12 +141,21 @@ const postReview = review => ({
       return res;
   }
 
+  export const dropReview = id => async dispatch => {
+    await csrfFetch(`/api/reviews/${id}`,
+      {
+        method: 'DELETE'
+      }
+    ).catch(res => res.json())
+    dispatch(deleteReview(id))
+  }
+
 
 
 const initialState = {
     spots: {},
     spot: null,
-    reviews: [],
+    reviews: {},
 } 
 
 const spotReducer = (state = initialState, action) => {
@@ -167,12 +182,20 @@ const spotReducer = (state = initialState, action) => {
         }
         case GET_REVIEWS: {
           const newState = { ...state}
-          newState.reviews = action.reviews  
+          newState.reviews = {}
+          action.reviews.forEach(review => {
+            newState.reviews[review.id] = review;
+          }); 
           return newState
         }
         case POST_REVIEW: {
           const newState = {...state}
-          newState.reviews = [...newState.reviews, action.review]
+          newState.reviews[action.review.id] = action.review
+          return newState
+        }
+        case DELETE_REVIEW: {
+          const newState = {...state}
+          delete newState.reviews[action.review.id]
           return newState
         }
           default:

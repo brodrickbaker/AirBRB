@@ -1,4 +1,4 @@
-import { getReviews } from "../../store/spot";
+import { getReviews, dropReview, getOneSpot } from "../../store/spot";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -25,14 +25,24 @@ const ShowReviews = (props) => {
     const {spot} = props;
     const {spotId} = useParams();
     const dispatch = useDispatch();
-    const reviews = useSelector(state => state.spot.reviews);
+    let reviews = useSelector(state => state.spot.reviews);
     const user = useSelector(state => state.session.user);
     const [reviewed, setReviewed] = useState(false)
+    reviews = Object.values(reviews).reverse()  
+
     
     useEffect(() => {
       dispatch(getReviews(spotId))
-      setReviewed(reviews.find(review => user?.id == review.userId))
-    }, [dispatch, reviews, spotId, user])
+      setReviewed(reviews.find((review => review.User.id == user.id)))
+    }, [dispatch, reviewed])
+
+
+    const handleDelete = async (id) => {
+        if(confirm('Are you sure you want to delete?')){
+            await dispatch(dropReview(id)).then(() => dispatch(getReviews(spotId)).then(() => dispatch(getOneSpot(spotId)))) 
+            setReviewed(reviews.find((review => review.User.id == user.id)))
+            }
+    }
 
 if(reviews.length){
   return (   
@@ -51,6 +61,12 @@ if(reviews.length){
                     <h3>{review.User?.firstName}</h3>
                     <h3>{createdAt}</h3>
                     <p>{review.review}</p>
+                    {console.log(review)}
+                    {review.userId == user.id &&
+                    <button
+                    className="btn"
+                    onClick={() => handleDelete(review.id)}
+                    >Delete</button>}
                 </li>
                 )}
             )}

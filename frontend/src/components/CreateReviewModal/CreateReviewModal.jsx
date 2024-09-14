@@ -20,7 +20,7 @@ const CreateReviewModal = (props) => {
             review,
             stars
         }
-        return dispatch(addReview(payload)).then(dispatch(getOneSpot(spot.id))).then(dispatch(getReviews(spot.id)))
+        return dispatch(addReview(payload)).then(() => dispatch(getOneSpot(spot.id))).then(() => dispatch(getReviews(spot.id)))
         .then(closeModal())
         .catch(async res => {
             const data = await res.json();
@@ -29,6 +29,8 @@ const CreateReviewModal = (props) => {
         );
         
     };   
+
+    const disabled = (review.length < 10)? 'disabled' : ''
     return (
         <>
         <h1>How was your stay?</h1>
@@ -54,7 +56,7 @@ const CreateReviewModal = (props) => {
                 <option>4</option>
                 <option>5</option>
             </select>
-          <button type="submit" className='btn'>Submit</button>
+          <button type="submit" className={`btn ${disabled}`} disabled={disabled} >Submit</button>
           {errors && <span>{errors.message}</span>}
           </label>
         </form>
