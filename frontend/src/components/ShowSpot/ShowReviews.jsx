@@ -33,7 +33,7 @@ const ShowReviews = (props) => {
     useEffect(() => {
       dispatch(getReviews(spotId))
       setReviewed(reviews.find((review => review.userId == user?.id)))
-    }, [dispatch, reviewed])
+    }, [dispatch, reviewed, user])
 
 
     const handleDelete = async (id) => {

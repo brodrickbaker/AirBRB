@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from "react-redux";
-import { getOneSpot } from "../../store/spot";
+import { getOneSpot, getReviews } from "../../store/spot";
 import './ShowSpot.css'
 import CalloutBox from "../CalloutBox";
 import ShowReviews from "./ShowReviews";
@@ -14,6 +14,7 @@ const ShowSpot = () => {
   
   useEffect(() => {
     dispatch(getOneSpot(spotId))
+    dispatch(getReviews(spotId))
   }, [dispatch, spotId])
 
     return (
