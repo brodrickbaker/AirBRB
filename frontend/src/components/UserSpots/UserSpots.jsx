@@ -28,11 +28,10 @@ const UserSpots = () => {
       await dispatch(dropSpot(spot.id)).then(()=> dispatch(getSpots())) 
       setSpots(userSpots.length)
       }
-      
     } 
 
-    const handleUpdate = (e) => async (spot) => {
-      e.preventDefault
+    const handleUpdate = (spot) => async (e) => {
+      e.preventDefault()
       await dispatch(getOneSpot(spot.id)).then(()=> navigate(`/spots/${spot.id}/update`))
     }
     return (

@@ -57,22 +57,19 @@ const CreateSpot = () => {
       setUrl2('');
       setUrl3('');
       setUrl4('');
+      setErrors({})
+      setPreviewError('')
+      setUrlError('')
     };
-  
       const handleSubmit = async (e) => {
         e.preventDefault();
-        setErrors({})
-        setPreviewError('')
-        setUrlError('')
-
         const images = [{url: preview, preview: true}, {url: url1}, {url: url2}, {url: url3}, {url: url4}]
         
-        preview? setPreviewError(''): setPreviewError('Preview image is requred.')
+        preview? setPreviewError(''): setPreviewError('Preview image is requred')
         images.forEach(image => {
           (image.url && !image.url.endsWith('.png' || '.jpg' || '.jpeg'))? setUrlError('Image URL must end in .png, .jpg, or .jpeg'): setUrlError('')
         })
-
-        
+   
         const payload = {
           country,
           address,
@@ -85,11 +82,11 @@ const CreateSpot = () => {
           price: parseInt(price),
           images
         };
-        
         if(!urlError && !previewError){
-        const createdSpot = await dispatch(createSpot(payload))
-        setErrors(createdSpot.errors)
-        if (!errors) {
+          const createdSpot = await dispatch(createSpot(payload))
+          setErrors({})
+          setErrors(createdSpot.errors)
+          if (!createdSpot.errors) {
           reset();
           dispatch(getSpots());
           navigate(`/spots/${createdSpot.id}`)
@@ -122,7 +119,7 @@ const CreateSpot = () => {
               placeholder="Street Address"
               value={address}
               onChange={updateAddress} />
-            <div className='inline address'>
+            <div className='grid address'>
             <label htmlFor='city'>
               City {errors && <span> {errors.city}</span>}
             </label>
@@ -142,7 +139,7 @@ const CreateSpot = () => {
               value={state}
               onChange={updateState} />
               </div>
-              <div className='inline latlng'>
+              <div className='grid latlng'>
             <label htmlFor='lat'>
               Latitude
             </label>
@@ -151,12 +148,14 @@ const CreateSpot = () => {
             </label>
             <input
               name='lat'
+              title='Not Required'
               type="text"
               placeholder="Latitude"
               value={lat}
               onChange={updateLatitude} />
             <input
               name='lng'
+              title='Not Required'
               type="text"
               placeholder="Longitude"
               value={lng}
@@ -193,12 +192,15 @@ const CreateSpot = () => {
             <div className='card form-card'>
               <h2>Set a base price for your spot</h2>
               <h3>Competitive pricing can help your listing stand oput and rank higher in search results.</h3>
-              $<input
-              name='price'
-              type="text"
-              placeholder="Price per night"
-              value={price}
-              onChange={updatePrice} />
+              <div className='inline'>
+                <h3>$</h3>
+                <input
+                name='price'
+                type="text"
+                placeholder="Price per night"
+                value={price}
+                onChange={updatePrice} />
+              </div>
               <label htmlFor='price'>
               {errors && <span> {errors.price}</span>}
               </label>

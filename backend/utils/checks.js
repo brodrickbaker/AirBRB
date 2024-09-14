@@ -16,7 +16,7 @@ const validateSpot = [
       .withMessage('City is required'),
     check('state')
       .exists({checkFalsy: true})
-      .withMessage('State is required'),
+      .withMessage('State required'),
     check('country')
       .exists({checkFalsy: true})
       .withMessage('Country is required'),
@@ -35,6 +35,8 @@ const validateSpot = [
       })
       .withMessage('Longitude must be within -180 and 180'),
     check('name')
+    .exists({ checkFalsy: true })
+      .withMessage('Name is required')
       .isLength({ max: 50 })
       .withMessage('Name must be less than 50 characters'),
     check('description')

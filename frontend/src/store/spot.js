@@ -64,9 +64,9 @@ const postReview = review => ({
         method: 'POST',
         body: JSON.stringify({country, address, city, state, lat, lng, description, name, price})
       }).catch(async res => await res.json())
-      
-      let newSpot = await res.json()
-      if (res.ok) {       
+      const errors = JSON.stringify(res.errors) 
+      if (!errors) {   
+        let newSpot = await res.json()    
         const newRes = await fetch(`/api/spots/${newSpot.id}`)
         newSpot = await newRes.json();
         dispatch(getSpot(newSpot));
@@ -76,6 +76,7 @@ const postReview = review => ({
               method: 'POST',
               body: JSON.stringify({ ...image})
           })
+           return newSpot
       }}}
       return res;
   }
@@ -107,8 +108,9 @@ const postReview = review => ({
         method: 'PUT',
         body: JSON.stringify({country, address, city, state, lat, lng, description, name, price})
       }
-    )
-      if (res.ok) {       
+    ).catch(async res => await res.json())
+    const errors = JSON.stringify(res.errors) 
+      if (!errors) {       
         const newRes = await fetch(`/api/spots/${spot.id}`)
         const newSpot = await newRes.json();
         dispatch(getSpot(newSpot));
@@ -118,7 +120,9 @@ const postReview = review => ({
               method: 'POST',
               body: JSON.stringify({ ...image})
           })
-      }}}
+      }}
+      return newSpot
+    }
       return res;
   }
 

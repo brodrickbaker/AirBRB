@@ -9,7 +9,6 @@ const UpdateSpot = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const {spotId} = useParams()
-
     const spot = useSelector(state => state.spot.spot)
 
     const [country, setCountry] = useState(spot? spot.country : '');
@@ -71,8 +70,9 @@ const UpdateSpot = () => {
         
         if(!urlError){
         const createdSpot = await dispatch(updateSpot(payload))
-        setErrors(createdSpot.errors)
-        if (!errors) {
+        setErrors({})
+          setErrors(createdSpot.errors)
+          if (!createdSpot.errors) {
           dispatch(getSpots());
           navigate(`/spots/${spotId}`)
         } 
@@ -104,7 +104,7 @@ const UpdateSpot = () => {
               placeholder="Street Address"
               value={address}
               onChange={updateAddress} />
-            <div className='inline address'>
+            <div className='grid address'>
             <label htmlFor='city'>
               City {errors && <span> {errors.city}</span>}
             </label>
@@ -124,7 +124,7 @@ const UpdateSpot = () => {
               value={state}
               onChange={updateState} />
               </div>
-              <div className='inline latlng'>
+              <div className='grid latlng'>
             <label htmlFor='lat'>
               Latitude
             </label>
@@ -175,12 +175,15 @@ const UpdateSpot = () => {
             <div className='card form-card'>
               <h2>Set a base price for your spot</h2>
               <h3>Competitive pricing can help your listing stand oput and rank higher in search results.</h3>
-              $<input
-              name='price'
-              type="text"
-              placeholder="Price per night"
-              value={price}
-              onChange={updatePrice} />
+              <div className='inline'>
+                <h3>$</h3>
+                <input
+                name='price'
+                type="text"
+                placeholder="Price per night"
+                value={price}
+                onChange={updatePrice} />
+              </div>
               <label htmlFor='price'>
               {errors && <span> {errors.price}</span>}
               </label>

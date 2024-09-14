@@ -1,13 +1,19 @@
 import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from "react";
 import './Gallery.css'
 
 const Gallery = (props) => {
 
   const {spot} = props
   const navigate = useNavigate()
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    if(spot) setIsLoaded(true)
+  }, [spot]);
     
   return (
-    <> {spot &&
+    <> {isLoaded &&
               <img src={spot.previewImage || 'https://i.ibb.co/bXxJtS9/9009180.png' }  
               alt={spot.name}
               title={spot.name}

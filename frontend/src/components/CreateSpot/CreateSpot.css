@@ -14,27 +14,45 @@
     padding:  20px 50px;
     width: 600px;
 }
-/* 
+
 #spot-form  > form > * {
     width: 500px;
     margin: 10px 50px;
-} */
+}
 #spot-form span {
     color: red;
     font-weight: bold;
     line-height: 80%;
 }
 
-.inline {
+.grid {
     display: grid;
 }
 
 .address {
     grid-template-columns: 2fr 1fr;
-    grid-template-rows: 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    line-height: 90%;
 }
 
 .latlng {
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
+}
+.latlng input {
+    background-color: rgb(167, 167, 167);
+}
+
+.inline {
+    display: flex;
+    align-items: stretch;
+}
+
+.inline input {
+    flex-grow: 1;
+}
+
+.inline h3 {
+    margin: 0px;
+    align-self: center;
 }
