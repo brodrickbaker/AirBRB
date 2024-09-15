@@ -1,17 +1,18 @@
 import Gallery from "../Gallery";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { dropSpot, getUserSpots, getOneSpot } from "../../store/spot";
-import { useEffect, useState } from "react";
+import { getUserSpots, getOneSpot } from "../../store/spot";
+import { useEffect } from "react";
+import OpenModalButton from "../OpenModalButton";
+import ConfirmDeleteModal from "../ConfirmDeleteModal";
 
 const UserSpots = () => {
     const navigate = useNavigate();
-    const dispatch = useDispatch()
-    const [spots, setSpots] = useState(0); 
+    const dispatch = useDispatch();
 
     useEffect(() => {
       dispatch(getUserSpots());
-    }, [dispatch, spots])
+    }, [dispatch])
 
     const userSpots = useSelector(state => state.spot.spots);
 
@@ -20,13 +21,6 @@ const UserSpots = () => {
     for (let i = Object.values(userSpots).length - 1; i >= 0; i--) {
         newFirst.push(Object.values(userSpots)[i])
     }
-
-    const handleDelete = async (spot) => {
-     if(confirm('Are you sure you want to delete?')){
-      await dispatch(dropSpot(spot.id)).then(()=> dispatch(getUserSpots())) 
-      setSpots(userSpots.length)
-      }
-    } 
 
     const handleUpdate = (spot) => async (e) => {
       e.preventDefault()
@@ -44,12 +38,13 @@ const UserSpots = () => {
             <div className="buttons">
               <button
               onClick={handleUpdate(spot)} 
-              className="btn"
-              >Update</button>
-              <button 
-              className="btn"
-              onClick={() => handleDelete(spot)}
-              >Delete</button>
+              className="btn">Update Spot</button>
+              <button className="btn">
+                <OpenModalButton
+                  buttonText="Delete Spot"
+                  modalComponent={<ConfirmDeleteModal itemString={'spot'} item={spot} />}
+                  />
+                  </button>
             </div>
           </li>
           )}

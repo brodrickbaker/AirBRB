@@ -54,7 +54,7 @@ function SignupFormModal() {
             required
           />
         </label>
-        <p className='error'>{errors.email}</p>
+        <span className='error'>{errors.email}</span>
         <label>
           <input
             type="text"
@@ -64,7 +64,7 @@ function SignupFormModal() {
             required
           />
         </label>
-        <p className='error'>{errors.username}</p>
+        <span className='error'>{errors.username}</span>
         <label>
           <input
             type="text"
@@ -74,7 +74,7 @@ function SignupFormModal() {
             required
           />
         </label>
-        <p className='error'>{errors.firstName}</p>
+        <span className='error'>{errors.firstName}</span>
         <label>
           <input
             type="text"
@@ -84,7 +84,7 @@ function SignupFormModal() {
             required
           />
         </label>
-        <p className='error'>{errors.lastName}</p>
+        <span className='error'>{errors.lastName}</span>
         <label>
           <input
             type="password"
@@ -94,7 +94,7 @@ function SignupFormModal() {
             required
           />
         </label>
-         <p className='class'>{errors.password}</p>
+         <span className='class'>{errors.password}</span>
         <label>
           <input
             type="password"
@@ -104,7 +104,7 @@ function SignupFormModal() {
             required
           />
         </label>
-         <p className='error'>{errors.confirmPassword}</p>
+         <span className='error'>{errors.confirmPassword}</span>
         <button type="submit" className={`btn ${disabled}`}  disabled={disabled}>Sign Up</button>
       </form>
     </>

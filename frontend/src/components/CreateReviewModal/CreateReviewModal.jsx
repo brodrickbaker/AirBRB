@@ -21,62 +21,61 @@ const CreateReviewModal = (props) => {
             review,
             stars
         }
-        return dispatch(addReview(payload)).then(() => dispatch(getOneSpot(spot.id))).then(() => dispatch(getReviews(spot.id)))
+        return dispatch(addReview(payload))
+        .then(() => dispatch(getOneSpot(spot.id)))
+        .then(() => dispatch(getReviews(spot.id)))
         .then(closeModal())
         .catch(async res => {
             const data = await res.json();
             if (data?.message) setErrors(data.message);
-          }
-          
+          }  
         );
-        
     };   
 
-    let stars1 = ''
-    let stars2 = ''
-    let stars3 = ''
-    let stars4 = ''
-    let stars5 = ''
+    let stars1 = '';
+    let stars2 = '';
+    let stars3 = '';
+    let stars4 = '';
+    let stars5 = '';
 
 
     switch (stars) {
       case 1: {
-        stars1 ='stars1'
-        console.log(stars)
+        stars1 = 'stars1';
         break;
       }
       case 2: {
-        stars1 ='stars1'
-        stars2 ='stars2'
+        stars1 = 'stars1';
+        stars2 = 'stars2';
         break;
       }
       case 3: {
-        stars1 ='stars1'
-        stars2 ='stars2'
-        stars3 ='stars3'
+        stars1 = 'stars1';
+        stars2 = 'stars2';
+        stars3 = 'stars3';
         break;
       }
       case 4: {
-        stars1 ='stars1'
-        stars2 ='stars2'
-        stars3 ='stars3'
-        stars4 ='stars4'
+        stars1 = 'stars1';
+        stars2 = 'stars2';
+        stars3 = 'stars3';
+        stars4 = 'stars4';
         break;
       }
       case 5: {
-        stars1 ='stars1'
-        stars2 ='stars2'
-        stars3 ='stars3'
-        stars4 ='stars4'
-        stars5 ='stars5'
+        stars1 = 'stars1';
+        stars2 = 'stars2';
+        stars3 = 'stars3';
+        stars4 = 'stars4';
+        stars5 = 'stars5';
         break;
       }
       default:
-        stars1 =''
-        stars2 =''
-        stars3 =''
-        stars4 =''
-        stars5 =''
+        stars1 = '';
+        stars2 = '';
+        stars3 = '';
+        stars4 = '';
+        stars5 = '';
     }
 
     const disabled = (review.length < 10 || stars == 0)? 'disabled' : ''
@@ -84,7 +83,7 @@ const CreateReviewModal = (props) => {
         <>
         <h1>How was your stay?</h1>
         <form onSubmit={handleSubmit}
-        className='review'>
+         className='review'>
           <label name='review'>
             <textarea
               value={review}

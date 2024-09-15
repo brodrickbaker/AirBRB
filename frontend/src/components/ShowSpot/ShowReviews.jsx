@@ -1,10 +1,11 @@
-import { getReviews, dropReview, getOneSpot } from "../../store/spot";
+import { getReviews } from "../../store/spot";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { sOrNah } from "../../store/spot";
 import OpenModalButton from "../OpenModalButton";
 import CreateReviewModal from "../CreateReviewModal";
+import ConfirmDeleteModal from "../ConfirmDeleteModal";
 
 const months = { 
     '01': 'January',
@@ -27,44 +28,38 @@ const ShowReviews = (props) => {
     const dispatch = useDispatch();
     let reviews = useSelector(state => state.spot.reviews);
     const user = useSelector(state => state.session.user);
-    const [reviewed, setReviewed] = useState(false)
     reviews = Object.values(reviews).reverse()  
+    const reviewed = reviews?.find((review => review.userId == user?.id))
 
     useEffect(() => {
       dispatch(getReviews(spotId))
-      setReviewed(reviews.find((review => review.userId == user?.id)))
-    }, [dispatch, reviewed, user])
+    }, [dispatch, spotId])
 
-
-    const handleDelete = async (id) => {
-        if(confirm('Are you sure you want to delete?')){
-            await dispatch(dropReview(id)).then(() => dispatch(getReviews(spotId)).then(() => dispatch(getOneSpot(spotId)))) 
-            setReviewed(reviews.find((review => review.userId == user?.id)))
-            }
-    }
-
-if(reviews.length){
-  return (   
+    if(reviews.length){
+    return (   
     <div>
         <h2>{' ⭐ ' + spot.avgStarRating  + '  •  ' + spot.numReviews + ' ' + sOrNah(reviews.length)}&nbsp;&nbsp;
-            {!reviewed && user &&
+            {user && !reviewed && (user.id != spot.Owner.id) &&
             <button className="btn">
                 <OpenModalButton
                 buttonText="Write a Review"
                 modalComponent={<CreateReviewModal spot={spot} user={user}/>}
               /></button>}</h2>
          <ul className="card" id="review">{reviews.map(review => {       
-            const createdAt = months[review.createdAt.slice(5,7)] + ' ' + review.createdAt.slice(0,4);    
+            const month = months[review.createdAt.slice(5,7)] + ' ' + review.createdAt.slice(0,4);    
             return (
                 <li key={review.id}>
-                    <h3>{review.User.firstName}</h3>
-                    <h3>{createdAt}</h3>
+                    <h3>{review.User?.firstName}</h3>
+                    <h3>{month}</h3>
                     <p>{review.review}</p>
                     {review.userId == user?.id &&
-                    <button
-                    className="btn"
-                    onClick={() => handleDelete(review.id)}
-                    >Delete</button>}
+                        <button className="btn">
+                        <OpenModalButton
+                        buttonText="Delete Review"
+                        modalComponent={<ConfirmDeleteModal itemString={'review'} item={review} />}
+                        onModalClose={reviewed}
+                        />
+                        </button>}
                 </li>
                 )}
             )}
@@ -74,12 +69,12 @@ if(reviews.length){
 } else if(!reviews.length && user && user.id !== spot.ownerId)  {
     return (
     <>
-        <h2>⭐ 0.0&nbsp;&nbsp;{!reviewed && 
+        <h2>⭐ 0.0&nbsp;&nbsp;
             <button className="btn">
                 <OpenModalButton
                 buttonText="Write a Review"
                 modalComponent={<CreateReviewModal spot={spot} user={user} />}
-              /></button>}</h2>
+              /></button></h2>
         <div className="card">
             <h3>Be the first tor write a review</h3>
         </div>

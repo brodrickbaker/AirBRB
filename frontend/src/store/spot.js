@@ -51,7 +51,6 @@ const deleteReview = review => ({
     const res = await fetch(`/api/spots/current`);
     if (res.ok) {
       const list = await res.json();
-      console.log(list)
       dispatch(loadSpots(list.Spots));
     }
   }
@@ -96,26 +95,6 @@ const deleteReview = review => ({
       return res;
   }
 
-  export const dropSpot = id => async dispatch => {
-    await csrfFetch(`/api/spots/${id}`,
-      {
-        method: 'DELETE'
-      }
-    ).catch(res => res.json())
-    dispatch(deleteSpot(id))
-  }
-
-  export const addReview = (review) => async dispatch => {
-    const res = await csrfFetch(`/api/spots/${review.spotId}/reviews`,
-      {
-        method: 'POST',
-        body: JSON.stringify(review)
-      })
-      const newReview = await res.json()
-      dispatch(postReview(newReview));
-      return res; 
-  }
-
   export const updateSpot = spot => async dispatch => {
     const {id, country, address, city, state, lat, lng, description, name, price, images} = spot
     const res = await csrfFetch(`/api/spots/${id}`,
@@ -141,6 +120,26 @@ const deleteReview = review => ({
       return res;
   }
 
+  export const dropSpot = id => async dispatch => {
+    await csrfFetch(`/api/spots/${id}`,
+      {
+        method: 'DELETE'
+      }
+    ).catch(res => res.json())
+    dispatch(deleteSpot(id))
+  }
+
+  export const addReview = (review) => async dispatch => {
+    const res = await csrfFetch(`/api/spots/${review.spotId}/reviews`,
+      {
+        method: 'POST',
+        body: JSON.stringify(review)
+      })
+      const newReview = await res.json()
+      dispatch(postReview(newReview));
+      return res; 
+  }
+  
   export const dropReview = id => async dispatch => {
     await csrfFetch(`/api/reviews/${id}`,
       {
