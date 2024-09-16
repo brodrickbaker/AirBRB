@@ -9,13 +9,13 @@ module.exports = {
   async up (queryInterface, Sequelize) {
     await Review.bulkCreate([
       {
-        userId: 1,
+        userId: 2,
         spotId: 1,
         review: 'Augue vulputate vivamus tincidunt efficitur fames ad in potenti massa. Penatibus ad amet bibendum dictum habitasse ex arcu. At netus enim aliquam mauris est. Augue integer pretium placerat iaculis ut elit nulla. At interdum sociosqu orci justo fringilla penatibus sociosqu et. Imperdiet iaculis integer per et in placerat. Maximus velit dignissim at; congue vehicula ac fames eros! Nascetur malesuada ullamcorper ullamcorper nisi cursus nisl.',
         stars: 4
       },
       {
-        userId: 2,
+        userId: 1,
         spotId: 2,
         review: 'Quis ad conubia a vulputate dapibus lectus ad. Tortor a ut curae ornare ad semper. Tempus aptent suspendisse quis eros nostra vel. Vulputate in lacus cubilia porttitor lacinia leo tristique ad. Sem diam euismod mus taciti rhoncus imperdiet ipsum. Quis sem libero inceptos; est nec sem luctus. Nostra rutrum sollicitudin sapien suscipit dolor fames nam.',
         stars: 5
@@ -37,18 +37,6 @@ module.exports = {
         spotId: 2,
         review: 'Augue vulputate vivamus tincidunt efficitur fames ad in potenti massa. Penatibus ad amet bibendum dictum habitasse ex arcu. At netus enim aliquam mauris est. Augue integer pretium placerat iaculis ut elit nulla. At interdum sociosqu orci justo fringilla penatibus sociosqu et. Imperdiet iaculis integer per et in placerat. Maximus velit dignissim at; congue vehicula ac fames eros! Nascetur malesuada ullamcorper ullamcorper nisi cursus nisl.',
         stars: 1
-      },
-      {
-        userId: 1,
-        spotId: 2,
-        review: 'Augue vulputate vivamus tincidunt efficitur fames ad in potenti massa. Penatibus ad amet bibendum dictum habitasse ex arcu. At netus enim aliquam mauris est. Augue integer pretium placerat iaculis ut elit nulla. At interdum sociosqu orci justo fringilla penatibus sociosqu et. Imperdiet iaculis integer per et in placerat. Maximus velit dignissim at; congue vehicula ac fames eros! Nascetur malesuada ullamcorper ullamcorper nisi cursus nisl.',
-        stars: 3
-      },
-      {
-        userId: 2,
-        spotId: 1,
-        review: 'Quis ad conubia a vulputate dapibus lectus ad. Tortor a ut curae ornare ad semper. Tempus aptent suspendisse quis eros nostra vel. Vulputate in lacus cubilia porttitor lacinia leo tristique ad. Sem diam euismod mus taciti rhoncus imperdiet ipsum. Quis sem libero inceptos; est nec sem luctus. Nostra rutrum sollicitudin sapien suscipit dolor fames nam.',
-        stars: 5
       },
       {
         userId: 2,

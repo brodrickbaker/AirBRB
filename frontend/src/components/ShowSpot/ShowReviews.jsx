@@ -49,7 +49,7 @@ const ShowReviews = (props) => {
             const month = months[review.createdAt.slice(5,7)] + ' ' + review.createdAt.slice(0,4);    
             return (
                 <li key={review.id}>
-                    <h3>{review.User?.firstName}</h3>
+                    <h3>{review.User.firstName}</h3>
                     <h3>{month}</h3>
                     <p>{review.review}</p>
                     {review.userId == user?.id &&
@@ -77,7 +77,7 @@ const ShowReviews = (props) => {
             </button>
         </h2>
         <div className="card">
-            <h3>Be the first tor write a review</h3>
+            <h3>Be the first to write a review</h3>
         </div>
     </>
 )} else {

@@ -192,7 +192,7 @@ const CreateSpot = () => {
               </div>
               <div className='card form-card'>
                 <h2>Set a base price for your spot</h2>
-                <h3>Competitive pricing can help your listing stand oput and rank higher in search results.</h3>
+                <h3>Competitive pricing can help your listing stand out and rank higher in search results.</h3>
               <div className='inline'>
                 <h3>$</h3>
                 <input
