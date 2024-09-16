@@ -105,7 +105,7 @@ function SignupFormModal() {
           />
         </label>
          <span className='error'>{errors.confirmPassword}</span>
-        <button type="submit" className={`btn ${disabled}`}  disabled={disabled}>Sign Up</button>
+        <button type="submit" id='modal-button' className={`btn ${disabled}`}  disabled={disabled}>Sign Up</button>
       </form>
     </>
   );

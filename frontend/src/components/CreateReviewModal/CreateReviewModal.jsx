@@ -41,33 +41,33 @@ const CreateReviewModal = (props) => {
 
     switch (stars) {
       case 1: {
-        stars1 = 'stars1';
+        stars1 = 'stars';
         break;
       }
       case 2: {
-        stars1 = 'stars1';
-        stars2 = 'stars2';
+        stars1 = 'stars';
+        stars2 = 'stars';
         break;
       }
       case 3: {
-        stars1 = 'stars1';
-        stars2 = 'stars2';
-        stars3 = 'stars3';
+        stars1 = 'stars';
+        stars2 = 'stars';
+        stars3 = 'stars';
         break;
       }
       case 4: {
-        stars1 = 'stars1';
-        stars2 = 'stars2';
-        stars3 = 'stars3';
-        stars4 = 'stars4';
+        stars1 = 'stars';
+        stars2 = 'stars';
+        stars3 = 'stars';
+        stars4 = 'stars';
         break;
       }
       case 5: {
-        stars1 = 'stars1';
-        stars2 = 'stars2';
-        stars3 = 'stars3';
-        stars4 = 'stars4';
-        stars5 = 'stars5';
+        stars1 = 'stars';
+        stars2 = 'stars';
+        stars3 = 'stars';
+        stars4 = 'stars';
+        stars5 = 'stars';
         break;
       }
       default:
@@ -94,8 +94,7 @@ const CreateReviewModal = (props) => {
               required>
             </textarea>
           </label>
-            <div className="card stars">
-            <br />
+          <div className="card stars">
             <span onClick={() => setStars(1)}
               className={`star ${stars1}`}>★
             </span>
@@ -113,9 +112,9 @@ const CreateReviewModal = (props) => {
             </span>
             <span>&nbsp;&nbsp;Stars</span>
           </div>
+          <button type="submit" id='modal-button' className={`btn ${disabled}`} disabled={disabled} >Submit Review</button>
           <label>
-          <button type="submit" className={`btn ${disabled}`} disabled={disabled} >Submit</button>
-          {errors && <span>{errors.message}</span>}
+            {errors && <span>{errors.message}</span>}
           </label>
         </form>
       </>

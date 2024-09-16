@@ -35,7 +35,7 @@ const ShowReviews = (props) => {
       dispatch(getReviews(spotId))
     }, [dispatch, spotId])
 
-    if(reviews.length){
+    if(reviews.length){ 
     return (   
     <div>
         <h2>{' ⭐ ' + spot.avgStarRating  + '  •  ' + spot.numReviews + ' ' + sOrNah(reviews.length)}&nbsp;&nbsp;
@@ -53,20 +53,19 @@ const ShowReviews = (props) => {
                     <h3>{month}</h3>
                     <p>{review.review}</p>
                     {review.userId == user?.id &&
-                        <button className="btn">
+                    <button className="btn">
                         <OpenModalButton
                         buttonText="Delete Review"
                         modalComponent={<ConfirmDeleteModal itemString={'review'} item={review} />}
                         onModalClose={reviewed}
                         />
-                        </button>}
+                    </button>}
                 </li>
-                )}
-            )}
+            )})}
         </ul>
     </div>
   )
-} else if(!reviews.length && user && user.id !== spot.ownerId)  {
+} else if (!reviews.length && user && user.id !== spot.ownerId) {
     return (
     <>
         <h2>⭐ 0.0&nbsp;&nbsp;
@@ -74,7 +73,9 @@ const ShowReviews = (props) => {
                 <OpenModalButton
                 buttonText="Write a Review"
                 modalComponent={<CreateReviewModal spot={spot} user={user} />}
-              /></button></h2>
+                />
+            </button>
+        </h2>
         <div className="card">
             <h3>Be the first tor write a review</h3>
         </div>

@@ -2,15 +2,12 @@
     font-size: 30px;
 }
 
-.stars {
-    align-items: center;
-}
-
 .star:hover {
     color: gold;
     cursor: pointer;
 }
 
-.stars1, .stars2, .stars3, .stars4, .stars5 {
-    color: gold
+.stars {
+    align-items: center;
+    color: gold;
 }

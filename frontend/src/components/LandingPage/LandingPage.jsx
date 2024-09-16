@@ -4,14 +4,10 @@ import { useEffect } from 'react';
 import Gallery from '../Gallery';
 
 const LandingPage = () => {
-    const allSpots = useSelector(state => state.spot.spots);
+
     const dispatch = useDispatch();
-  
-    const newFirst = []
-  
-    for (let i = Object.values(allSpots).length - 1; i >= 0; i--) {
-        newFirst.push(Object.values(allSpots)[i])
-    }
+    let allSpots = useSelector(state => state.spot.spots);
+    allSpots = Object.values(allSpots).reverse()
   
     useEffect(() => {
       dispatch(getSpots())
@@ -20,16 +16,16 @@ const LandingPage = () => {
       return (
       <>
       {allSpots && 
-      <h1>Welcome!</h1>}
-          <div className='gallery'>
-          <ul className='card'>{newFirst.map(spot => {
+      <h1>Welcome to airBRB!</h1>}
+        <div className='gallery'>
+          <ul className='card'>{allSpots.map(spot => {
           return (
-          <li key={spot.id}>
-            <Gallery spot={spot}/>
-          </li>
-          )}
-          )}</ul>
-          </div>
+            <li key={spot.id}>
+              <Gallery spot={spot}/>
+            </li>
+          )})}
+          </ul>
+        </div>
       </>
       )
 };

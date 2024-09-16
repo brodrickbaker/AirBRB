@@ -24,8 +24,10 @@ const ConfirmDeleteModal = (props) => {
         <div className='alert'>
             <h2>Confirm Delete</h2>
             <h3>Are you sure you want to delete this {itemString}?</h3>
-            <button className='btn' onClick={() => handleDelete(item.id)}>Yes (Delete {itemString})</button>
-            <button className='btn close-modal' onClick={closeModal}>No (Keep {itemString})</button>
+            <div className='buttons'>
+                <button id='modal-button' className='btn' onClick={() => handleDelete(item.id)}>Yes (Delete {itemString})</button>
+                <button id='modal-button' className='btn modal-button close-modal' onClick={closeModal}>No (Keep {itemString})</button>
+            </div>
         </div>
     )
 }

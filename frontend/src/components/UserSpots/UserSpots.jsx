@@ -14,13 +14,8 @@ const UserSpots = () => {
       dispatch(getUserSpots());
     }, [dispatch])
 
-    const userSpots = useSelector(state => state.spot.spots);
-
-    const newFirst = []
-  
-    for (let i = Object.values(userSpots).length - 1; i >= 0; i--) {
-        newFirst.push(Object.values(userSpots)[i])
-    }
+    let userSpots = useSelector(state => state.spot.spots);
+    userSpots = Object.values(userSpots).reverse()
 
     const handleUpdate = (spot) => async (e) => {
       e.preventDefault()
@@ -29,9 +24,9 @@ const UserSpots = () => {
     return (
       <>
       <h1>Your Spots</h1>
-      {newFirst.length?
-          <div className='gallery'>
-          <ul className='card'>{newFirst.map(spot => {
+      {userSpots.length?
+        <div className='gallery'>
+        <ul className='card'>{userSpots.map(spot => {
           return (
           <li key={spot.id}>
             <Gallery spot={spot}/>
@@ -44,13 +39,14 @@ const UserSpots = () => {
                   buttonText="Delete Spot"
                   modalComponent={<ConfirmDeleteModal itemString={'spot'} item={spot} />}
                   />
-                  </button>
+              </button>
             </div>
           </li>
           )}
-          )}</ul>
-          </div>: 
-          <button className="btn" onClick={()=> navigate('/spots/new')}>Create a New Spot</button>}
+        )}
+        </ul>
+        </div> : 
+        <button className="btn" onClick={()=> navigate('/spots/new')}>Create a New Spot</button>}
       </>
   )
 };

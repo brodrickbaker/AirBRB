@@ -108,8 +108,9 @@ input, select, textarea {
     background-color: #fbe9df;
 }
 
-.alert {
-   justify-content: space-around;
+.alert {   
+   justify-items: center;
+   align-items: center;
 }
 
 form {
@@ -151,10 +152,6 @@ ul, li {
     color: #ff0000;
     font-weight: bold;
     line-height: 80%;
-}
-
-#modal-content input {
-    width: 200px;
 }
 
 @media screen and (max-width:850px) {

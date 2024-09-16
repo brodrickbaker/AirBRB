@@ -9,6 +9,7 @@ const LoginFormModal = () => {
     const [password, setPassword] = useState("");
     const [errors, setErrors] = useState({});
     const { closeModal } = useModal();
+    const disabled = (password.length < 6 || credential.length < 4)? 'disabled' : ''
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -23,12 +24,10 @@ const LoginFormModal = () => {
     };
 
     const loginDemo = (e) => {
-      e.preventDefault
+      e.preventDefault();
       return dispatch(sessionActions.login({credential: 'Demo-lition', password: 'password'}))
       .then(closeModal)
     }
-
-    const disabled = (password.length < 6 || credential.length < 4)? 'disabled' : ''
 
     return (
         <>
@@ -52,8 +51,8 @@ const LoginFormModal = () => {
               required
             />
           </label>
-           <p className='error'>{errors.credential}</p>
-          <button type="submit" className={`btn ${disabled}`} disabled={disabled}>Log In</button>
+          <p className='error'>{errors.credential}</p>
+          <button type="submit" id='modal-button' className={`btn ${disabled}`} disabled={disabled}>Log In</button>
           <p id='demo-login' onClick={loginDemo}>Demo User</p>
         </form>
       </>

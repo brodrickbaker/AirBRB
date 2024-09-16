@@ -41,13 +41,24 @@
     padding: 5px;
     margin: 5px;
   }
-
-
-  button {
+  
+  #modal-button {
     width: 50%;
   }
 
   #modal-content h1 {
     padding: 0;
     align-self: center;
+  }
+  
+  #modal-content input {
+    width: 200px;
+  }
+
+  .btn.close-modal {
+    background: linear-gradient(190deg, #201f1f, #454545 ,#797878);
+  }
+
+  .btn.close-modal:hover {
+    background: #3e3e3e;
   }
