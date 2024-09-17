@@ -84,15 +84,17 @@ const deleteReview = review => ({
         const newRes = await fetch(`/api/spots/${newSpot.id}`)
         newSpot = await newRes.json();
         dispatch(getSpot(newSpot));
-        for await (let image of images){
+        await images.forEach(image => {
           if(image.url){
           csrfFetch(`/api/spots/${newSpot.id}/images`, {
               method: 'POST',
               body: JSON.stringify({ ...image})
           })
-           return newSpot
-      }}}
-      return res;
+          return newSpot
+          }
+        })
+      }
+    return res;
   }
 
   export const updateSpot = spot => async dispatch => {
@@ -108,16 +110,17 @@ const deleteReview = review => ({
         const newRes = await fetch(`/api/spots/${spot.id}`)
         const newSpot = await newRes.json();
         dispatch(getSpot(newSpot));
-        for await (let image of images){
+        await images.forEach(image => {
           if(image.url){
           csrfFetch(`/api/spots/${newSpot.id}/images`, {
               method: 'POST',
               body: JSON.stringify({ ...image})
           })
-      }}
-      return newSpot
-    }
-      return res;
+          return newSpot
+          }
+        })
+      }
+    return res;
   }
 
   export const dropSpot = id => async dispatch => {
