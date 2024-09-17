@@ -49,10 +49,10 @@ const ShowReviews = (props) => {
             const month = months[review.createdAt.slice(5,7)] + ' ' + review.createdAt.slice(0,4);    
             return (
                 <li key={review.id}>
-                    <h3>{review.User.firstName}</h3>
+                    <h3>{review.User?.firstName}</h3>
                     <h3>{month}</h3>
                     <p>{review.review}</p>
-                    {review.userId == user?.id &&
+                    {review.userId == user.id &&
                     <button className="btn">
                         <OpenModalButton
                         buttonText="Delete Review"
