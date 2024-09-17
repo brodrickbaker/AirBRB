@@ -4,7 +4,7 @@ const SpotImages = (props) => {
 
   return (
     <div className="card">
-      <img src={spot.SpotImages.find(image=> image.preview).url} className="main"/>
+      <img src={spot.SpotImages.find(image=> image.preview)?.url} className="main"/>
       <ul className="spot-image">{images.map(image => {
         return (
           <li key={image.id}>
