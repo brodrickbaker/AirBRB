@@ -61,17 +61,18 @@ const CreateSpot = () => {
       setPreviewError('')
       setUrlError('')
     };
-      const handleSubmit = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const images = [{url: preview, preview: true}, {url: url1}, {url: url2}, {url: url3}, {url: url4}]
         
-        preview? setPreviewError(''): setPreviewError('Preview image is requred')
-        setUrlError('') 
-        const urlCheck = images.reduce((acc, curr, i) =>{
-          if (images[i].url != '' && !images[i].url.endsWith('.png' || '.jpg' || '.jpeg')) return acc + 1 
-          else return acc
+        const urlCheck = images.reduce((acc, curr, i) => {
+          if (images[i].url && !(images[i].url.endsWith('.png') || images[i].url.endsWith('.jpg') || images[i].url.endsWith('.jpeg'))) {
+            return acc + 1
+          } else return acc + 0
         }, 0)
-        urlCheck > 1? setUrlError('Image URL must end in .png, .jpg, or .jpeg'): setUrlError('')
+
+        setUrlError(urlCheck? 'Image URL must end in .png, .jpg, or .jpeg': '')
+        setPreviewError(preview? '': 'Preview image is requred')
 
         const payload = {
           country,
@@ -86,7 +87,7 @@ const CreateSpot = () => {
           images
         };
 
-        if(!urlError && !previewError){
+        if(!urlCheck && preview){
           const createdSpot = await dispatch(createSpot(payload))
           setErrors({})
           setErrors(createdSpot.errors)

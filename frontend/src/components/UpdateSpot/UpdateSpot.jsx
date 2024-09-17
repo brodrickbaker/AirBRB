@@ -46,14 +46,17 @@ const UpdateSpot = () => {
       const handleSubmit = async (e) => {
         e.preventDefault();
         setErrors({})
-        setUrlError('')
 
         const images = [{url: preview, preview: true}, {url: url1}, {url: url2}, {url: url3}, {url: url4}]
         
-        images.forEach(image => {
-          (image.url && !image.url.endsWith('.png' || '.jpg' || '.jpeg'))? setUrlError('Image URL must end in .png, .jpg, or .jpeg'): setUrlError('')
-        })
+        const urlCheck = images.reduce((acc, curr, i) => {
+          if (images[i].url && !(images[i].url.endsWith('.png') || images[i].url.endsWith('.jpg') || images[i].url.endsWith('.jpeg'))) {
+            return acc + 1
+          } else return acc + 0
+        }, 0)
 
+        setUrlError(urlCheck? 'Image URL must end in .png, .jpg, or .jpeg': '')
+       
         const payload = {
           id: spotId,
           country,
@@ -68,7 +71,7 @@ const UpdateSpot = () => {
           images
         };
         
-        if(!urlError){
+        if(!urlCheck){
         const createdSpot = await dispatch(updateSpot(payload))
         setErrors({})
           setErrors(createdSpot.errors)
