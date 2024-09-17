@@ -52,7 +52,7 @@ const ShowReviews = (props) => {
                     <h3>{review.User?.firstName}</h3>
                     <h3>{month}</h3>
                     <p>{review.review}</p>
-                    {review.userId == user.id &&
+                    {review.userId == user?.id &&
                     <button className="btn">
                         <OpenModalButton
                         buttonText="Delete Review"
