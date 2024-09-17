@@ -66,14 +66,13 @@ const CreateSpot = () => {
         const images = [{url: preview, preview: true}, {url: url1}, {url: url2}, {url: url3}, {url: url4}]
         
         preview? setPreviewError(''): setPreviewError('Preview image is requred')
-        const urlTest = images.reduce((acc, curr, i) => {
-          if(images[i].url && !images[i].url.endsWith('.png' || '.jpg' || '.jpeg')){
-            return  acc + 1
-          } else return  acc + 0   
+        setUrlError('') 
+        const urlCheck = images.reduce((acc, curr, i) =>{
+          if (images[i].url != '' && !images[i].url.endsWith('.png' || '.jpg' || '.jpeg')) return acc + 1 
+          else return acc
         }, 0)
+        urlCheck > 1? setUrlError('Image URL must end in .png, .jpg, or .jpeg'): setUrlError('')
 
-        urlTest? setUrlError('Image URL must end in .png, .jpg, or .jpeg'): setUrlError('')
-   
         const payload = {
           country,
           address,
