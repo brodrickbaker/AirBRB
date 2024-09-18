@@ -80,9 +80,10 @@ const deleteReview = review => ({
       }).catch(async res => await res.json())
       const errors = JSON.stringify(res.errors) 
       if (!errors) {   
-        let newSpot = await res.json()    
+        let newSpot = await res.json()   
         const newRes = await fetch(`/api/spots/${newSpot.id}`)
         newSpot = await newRes.json();
+        console.log(newSpot)
         dispatch(getSpot(newSpot));
         await images.forEach(image => {
           if(image.url){
@@ -90,9 +91,9 @@ const deleteReview = review => ({
               method: 'POST',
               body: JSON.stringify({ ...image})
           })
-          return newSpot
           }
         })
+        return newSpot
       }
     return res;
   }

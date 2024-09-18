@@ -71,8 +71,6 @@ const CreateSpot = () => {
           } else return acc + 0
         }, 0)
 
-        console.log(images)
-
         setUrlError(urlCheck? 'Image URL must end in .png, .jpg, or .jpeg': '')
         setPreviewError(preview? '': 'Preview image is requred')
 
