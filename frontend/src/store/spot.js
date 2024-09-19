@@ -73,24 +73,26 @@ const deleteReview = review => ({
 
   export const createSpot = spot => async dispatch => {
     const {country, address, city, state, lat, lng, description, name, price, images} = spot
-    const res = await csrfFetch('/api/spots/',
+    const res = await csrfFetch('/api/spots/', 
       {
         method: 'POST',
         body: JSON.stringify({country, address, city, state, lat, lng, description, name, price})
       }).catch(async res => await res.json())
+
       const errors = JSON.stringify(res.errors) 
       if (!errors) {   
         let newSpot = await res.json()   
         const newRes = await fetch(`/api/spots/${newSpot.id}`)
         newSpot = await newRes.json();
-        console.log(newSpot)
         dispatch(getSpot(newSpot));
+        
         await images.forEach(image => {
           if(image.url){
-          csrfFetch(`/api/spots/${newSpot.id}/images`, {
+          csrfFetch(`/api/spots/${newSpot.id}/images`, 
+            {
               method: 'POST',
               body: JSON.stringify({ ...image})
-          })
+            })
           }
         })
         return newSpot
@@ -106,17 +108,20 @@ const deleteReview = review => ({
         body: JSON.stringify({country, address, city, state, lat, lng, description, name, price})
       }
     ).catch(async res => await res.json())
+
     const errors = JSON.stringify(res.errors) 
       if (!errors) {       
         const newRes = await fetch(`/api/spots/${spot.id}`)
         const newSpot = await newRes.json();
         dispatch(getSpot(newSpot));
+        
         await images.forEach(image => {
           if(image.url){
-          csrfFetch(`/api/spots/${newSpot.id}/images`, {
+          csrfFetch(`/api/spots/${newSpot.id}/images`, 
+            {
               method: 'POST',
               body: JSON.stringify({ ...image})
-          })
+            })
           return newSpot
           }
         })
@@ -171,7 +176,6 @@ const spotReducer = (state = initialState, action) => {
           });
           return newState;
         }
-
         case GET_SPOT: {
             const newState = {...state}
             newState.spot = action.spot
