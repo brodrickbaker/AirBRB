@@ -1,7 +1,7 @@
 # `AirBRB`
 
 ## About
-* AirBrB is my first solo project at App Academy, this project was essentially a clone of AirBnB with my own styling flair
+* AirBRB is my first solo project at App Academy, this project was essentially a clone of AirBnB with my own styling flair
 
 * Live Link https://airbrb-c48c.onrender.com/
 
