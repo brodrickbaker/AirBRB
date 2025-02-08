@@ -1,5 +1,14 @@
 # `AirBRB`
 
+
+![Screenshot 2025-02-08 075849](https://github.com/user-attachments/assets/f82df325-9d2d-4511-ad2a-5d2c93a9fcba)
+
+
+![Screenshot 2025-02-08 075941](https://github.com/user-attachments/assets/28da7dec-f703-4edf-8b54-894c5c1ac1c0)
+
+
+![Screenshot 2025-02-08 075954](https://github.com/user-attachments/assets/2d8a8752-5936-427e-9312-327eb8f63431)
+
 ## Database Schema Design
 
 ![db design](./images/airbnb-db-schema.png)
