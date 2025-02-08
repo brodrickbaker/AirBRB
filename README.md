@@ -23,12 +23,20 @@
 
 ## Screenshots
 ## Main page
+* This is the main landing page
+* On this page a user can see all of the availabe spots
+* The user can also create a new spot from this page
 ![Screenshot 2025-02-08 075849](https://github.com/user-attachments/assets/f82df325-9d2d-4511-ad2a-5d2c93a9fcba)
 
 ## Spot page
+* This is the page seen when a particular spot is selected
+* On this page a user can book a spot (future feature) 
+* A user who is not the owner of the spot can write reviews for spots they have stayed at 
 ![Screenshot 2025-02-08 075941](https://github.com/user-attachments/assets/28da7dec-f703-4edf-8b54-894c5c1ac1c0)
 
 ## Manage Spots page
+* This page a user can see all of their owned spots
+* A user can edit or delete any of their existing spots from this page
 ![Screenshot 2025-02-08 075954](https://github.com/user-attachments/assets/2d8a8752-5936-427e-9312-327eb8f63431)
 
 ## Database Schema Design
