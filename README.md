@@ -1,5 +1,31 @@
 # `AirBRB`
 
+## About
+* AirBrB is my first solo project at App Academy, this project was essentially a clone of AirBnB with my own styling flair
+
+* Live Link [https://nba-rank.onrender.com/](https://airbrb-c48c.onrender.com/)
+
+## Technologies used 
+
+### Languages
+* JavaScript
+* PostgreSQL
+* HTML/CSS
+
+### Libraries
+* React
+* Redux
+* Express
+* Sequelize
+
+## Future Features
+* Currently users can only view their own pages. Update to allow users to see other users' pages.
+* Posts - add the ability for users to like and reply to other users' posts.
+* Players - would like to display images for players
+
+## Screenshots
+## Main page
+
 
 ![Screenshot 2025-02-08 075849](https://github.com/user-attachments/assets/f82df325-9d2d-4511-ad2a-5d2c93a9fcba)
 
